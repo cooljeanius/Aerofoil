@@ -11,6 +11,7 @@ updates:
       interval: "weekly"
   - package-ecosystem: "nuget"
     directory: "/"
+    directory: "/zlib/contrib/dotzlib/DotZLib"
     schedule:
       interval: "weekly"
   - package-ecosystem: "gradle"
