@@ -7,18 +7,30 @@ version: 2
 updates:
   - package-ecosystem: "gitsubmodule" # See documentation for possible values
     directory: "/" # Location of package manifests
+    directory: "/rapidjson"
     schedule:
       interval: "weekly"
   - package-ecosystem: "nuget"
     directory: "/"
     directory: "/zlib/contrib/dotzlib/DotZLib"
+    directory: "/SDL2-2.0.12/VisualC"
+    directory: "/SDL2-2.0.12/VisualC-WinRT"
     schedule:
       interval: "weekly"
   - package-ecosystem: "gradle"
     directory: "/AerofoilAndroid"
+    directory: "/SDL2-2.0.12/android-project"
     schedule:
       interval: "weekly"
   - package-ecosystem: "maven"
     directory: "/zlib/contrib/java/jzlib-1.1.2"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "docker"
+    directory: "/rapidjson/docker/debian"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "npm"
+    directory: "/rapidjson"
     schedule:
       interval: "weekly"
