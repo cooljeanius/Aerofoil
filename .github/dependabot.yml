@@ -22,10 +22,6 @@ updates:
     directory: "/SDL2-2.0.12/android-project"
     schedule:
       interval: "weekly"
-  - package-ecosystem: "maven"
-    directory: "/zlib/contrib/java/jzlib-1.1.2"
-    schedule:
-      interval: "weekly"
   - package-ecosystem: "docker"
     directory: "/rapidjson/docker/debian"
     schedule:
