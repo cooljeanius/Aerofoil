@@ -72,6 +72,8 @@ jobs:
         choco install emscripten
         npm install --save emscripten
         nuget install Microsoft.NET.Runtime.Emscripten.2.0.23.Sdk.win-x64
+        pip install auditwheel-emscripten itkwasm-compress-stringify-emscripten empack
+        pipx install auditwheel-emscripten itkwasm-compress-stringify-emscripten empack
         gem install esruby
         yarn add quickjs-emscripten
 
