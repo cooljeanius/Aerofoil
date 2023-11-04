@@ -71,6 +71,7 @@ jobs:
       run: |
         choco install emscripten
         npm install --save emscripten
+        nuget install Microsoft.NET.Runtime.Emscripten.2.0.23.Sdk.win-x64
         gem install esruby
         yarn add quickjs-emscripten
 
