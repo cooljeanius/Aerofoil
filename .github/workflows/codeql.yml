@@ -74,7 +74,7 @@ jobs:
         npm install --save emscripten
         nuget install Microsoft.NET.Runtime.Emscripten.2.0.23.Sdk.win-x64
         pip install auditwheel-emscripten itkwasm-compress-stringify-emscripten empack || pip install itkwasm-compress-stringify-emscripten empack
-        pipx install auditwheel-emscripten || pipx install pyodide-cli
+        pipx install auditwheel-emscripten || pipx install pyodide-cli || pipx install wasmtime
         pipx install --include-deps itkwasm-compress-stringify-emscripten
         pipx install empack
         gem install esruby
