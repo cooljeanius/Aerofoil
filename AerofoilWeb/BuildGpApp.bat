@@ -8,4 +8,4 @@ set FLAGS=-s USE_SDL=2 -flto -I../GpCommon/ -I../PortabilityLayer/ -I../Common/ 
 
 emcc -c %INPUT_DIR%/GpApp_Combined.cpp -o %OUTPUT_DIR%/GpApp_Combined.o %FLAGS%
 
-pause
+rem pause
