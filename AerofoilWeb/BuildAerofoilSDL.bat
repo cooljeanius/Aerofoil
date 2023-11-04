@@ -10,3 +10,4 @@ emcc -c %INPUT_DIR%/AerofoilSDL_Combined.cpp -o %OUTPUT_DIR%/AerofoilSDL_Combine
 bash emcc_docker.sh -c %INPUT_DIR%/AerofoilSDL_Combined.cpp -o %OUTPUT_DIR%/AerofoilSDL_Combined.o %FLAGS%
 
 rem pause
+sleep 1
