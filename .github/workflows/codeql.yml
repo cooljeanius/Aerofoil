@@ -34,7 +34,7 @@ jobs:
     #   - https://gh.io/using-larger-runners
     # Consider using larger runners for possible analysis time improvements.
     runs-on: 'windows-latest'
-    timeout-minutes: ${{ (matrix.language == 'c-sharp' && 120) || 360 }}
+    timeout-minutes: ${{ (matrix.language == 'csharp' && 120) || 360 }}
     permissions:
       actions: read
       contents: read
@@ -70,7 +70,9 @@ jobs:
       if: matrix.language == 'csharp'
       run: |
         choco install emscripten
-        npm install emscripten
+        npm install --save emscripten
+        gem install esruby
+        yarn add quickjs-emscripten
 
     # Autobuild attempts to build any compiled languages (C/C++, C#, Go, Java, or Swift).
     # If this step fails, then you should remove it and run the build manually (see below)
