@@ -110,7 +110,7 @@ namespace
 
 				PortabilityLayer::RIFFTag mainTag;
 				memcpy(&mainTag, res, sizeof(mainTag));
-				if (mainTag.m_chunkSize > size - sizeof(sizeof(PortabilityLayer::RIFFTag)))
+				if (mainTag.m_chunkSize > size - sizeof(PortabilityLayer::RIFFTag))
 					return false;
 
 				return true;
