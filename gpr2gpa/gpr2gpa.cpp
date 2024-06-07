@@ -98,6 +98,11 @@ void AppendFmt(std::vector<uint8_t> &array, const char *fmt, ...)
 	if (resultSize <= 0)
 		return;
 
+	// vsnprintf invalidates the va_list, so we need to
+	// reinit args so the next call doesn't print garbage.
+	va_end(args);
+	va_start(args, fmt);
+
 	size_t appendSize = static_cast<size_t>(resultSize);
 
 	if (SIZE_MAX == appendSize)
