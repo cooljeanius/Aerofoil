@@ -321,5 +321,19 @@ target_include_directories(hqx2bin PRIVATE
 	)
 target_link_libraries(hqx2bin PortabilityLayer)
 
+add_executable(hqx2gp
+	hqx2gp/hqx2gp.cpp
+	AerofoilPortable/GpAllocator_C.cpp
+	WindowsUnicodeToolShim/UnixUnicodeToolShim.cpp
+	)
+target_include_directories(hqx2gp PRIVATE
+	Common
+	GpCommon
+	PortabilityLayer
+	AerofoilPortable
+	WindowsUnicodeToolShim
+	)
+target_link_libraries(hqx2gp PortabilityLayer)
+
 
 install (TARGETS ${EXECNAME})
