@@ -359,5 +359,9 @@ target_include_directories(gpr2gpa PRIVATE
 	)
 target_link_libraries(gpr2gpa PortabilityLayer MacRomanConversion zlib)
 
+add_executable(MakeTimestamp MakeTimestamp/MakeTimestamp.cpp)
+target_include_directories(MakeTimestamp PRIVATE PortabilityLayer)
+target_link_libraries(MakeTimestamp PortabilityLayer)
+
 
 install (TARGETS ${EXECNAME})

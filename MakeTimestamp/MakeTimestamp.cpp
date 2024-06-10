@@ -1,6 +1,13 @@
+#ifdef _WIN32
 #include <Windows.h>
-#include <stdio.h>
-#include <stdint.h>
+
+#include <cstdint>
+#else
+#include <cstring>
+#include <ctime>
+#endif
+
+#include <cstdio>
 
 #include "CombinedTimestamp.h"
 
@@ -13,6 +20,7 @@ int main(int argc, const char **argv)
 		return -1;
 	}
 
+#ifdef _WIN32
 	SYSTEMTIME epochStart;
 	epochStart.wYear = 1904;
 	epochStart.wMonth = 1;
@@ -34,13 +42,6 @@ int main(int argc, const char **argv)
 	int64_t currentTime64 = (static_cast<int64_t>(timestampFT.dwLowDateTime) & 0xffffffff) | (static_cast<int64_t>(timestampFT.dwHighDateTime) << 32);
 	int64_t timeDelta = (currentTime64 - epochStart64) / 10000000;
 
-	FILE *f = nullptr;
-	if (fopen_s(&f, argv[1], "wb"))
-	{
-		fprintf(stderr, "Error opening output file");
-		return -1;
-	}
-
 	TIME_ZONE_INFORMATION tz;
 	GetTimeZoneInformation(&tz);
 
@@ -60,8 +61,35 @@ int main(int argc, const char **argv)
 	ts.m_localHour = localST.wHour;
 	ts.m_localMinute = localST.wMinute;
 	ts.m_localSecond = localST.wSecond;
+#else
+	time_t currentTimeUnix = time(nullptr);
+
+	tm *currentTimeStruct = localtime(&currentTimeUnix);
+	if (currentTimeStruct == nullptr) {
+		fprintf(stderr, "Error converting system time to calendar format");
+		return -1;
+	}
+
+	PortabilityLayer::CombinedTimestamp ts;
+	ts.SetMacEpochTime(currentTimeUnix + ts.kMacEpochToUTC);
+
+	ts.SetLocalYear(currentTimeStruct->tm_year + 1900);
+	ts.m_localMonth = currentTimeStruct->tm_mon + 1;
+	ts.m_localDay = currentTimeStruct->tm_mday;
+
+	ts.m_localHour = currentTimeStruct->tm_hour;
+	ts.m_localMinute = currentTimeStruct->tm_min;
+	ts.m_localSecond = currentTimeStruct->tm_sec;
+#endif
 
 	memset(ts.m_padding, 0, sizeof(ts.m_padding));
+
+	FILE *f = fopen(argv[1], "wb");
+	if (!f)
+	{
+		perror("Error opening output file");
+		return -1;
+	}
 
 	fwrite(&ts, sizeof(ts), 1, f);
 
