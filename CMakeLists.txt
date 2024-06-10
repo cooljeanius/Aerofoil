@@ -127,18 +127,18 @@ add_library(PortabilityLayer STATIC
 	)
 
 target_include_directories(PortabilityLayer PRIVATE
-	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Common>
-	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/GpCommon>
-	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/PortabilityLayer>
-	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/zlib>
-	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/rapidjson/include>
-	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/MacRomanConversion>
-	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/stb>
+	Common
+	GpCommon
+	PortabilityLayer
+	zlib
+	rapidjson/include
+	MacRomanConversion
+	stb
 	)
 
 target_compile_options(PortabilityLayer PRIVATE -Wno-multichar)
 
-target_link_libraries(PortabilityLayer zlib MacRomanConversion stb)
+target_link_libraries(PortabilityLayer PRIVATE zlib MacRomanConversion stb)
 
 
 add_library(GpShell STATIC
@@ -153,9 +153,9 @@ add_library(GpShell STATIC
 	)
 
 target_include_directories(GpShell PRIVATE
-	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Common>
-	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/GpCommon>
-	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/PortabilityLayer>
+	Common
+	GpCommon
+	PortabilityLayer
 	)
 
 add_library(GpApp STATIC
@@ -233,16 +233,15 @@ add_library(GpApp STATIC
 target_compile_options(GpApp PRIVATE -Wno-multichar)
 
 target_include_directories(GpApp PRIVATE
-	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Common>
-	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/GpCommon>
-	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/PortabilityLayer>
+	Common
+	GpCommon
+	PortabilityLayer
 	)
 
-target_link_libraries(GpApp PortabilityLayer)
+target_link_libraries(GpApp PRIVATE PortabilityLayer)
 
 if(CMAKE_HOST_UNIX)
-	set(EXEC_SOURCES )
-	list(APPEND EXEC_SOURCES
+	set(EXEC_SOURCES
 		AerofoilPortable/GpSystemServices_POSIX.cpp
 		AerofoilPortable/GpThreadEvent_Cpp11.cpp
 		AerofoilPortable/GpAllocator_C.cpp
@@ -260,21 +259,20 @@ if(CMAKE_HOST_UNIX)
 		AerofoilX/GpFileSystem_X.cpp
 		)
 
-	set(EXEC_LIBS )
-	list(APPEND EXEC_LIBS
+	set(EXEC_LIBS
 		${SDL2_LIBRARIES}
 		GpApp
 		GpShell
+		PortabilityLayer
 		)
 
-	set(EXEC_INC_DIRS )
-	list(APPEND EXEC_INC_DIRS
-		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Common>
-		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/GpCommon>
-		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/GpShell>
-		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/AerofoilSDL>
-		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/AerofoilPortable>
-		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/PortabilityLayer>
+	set(EXEC_INC_DIRS
+		Common
+		GpCommon
+		GpShell
+		AerofoilSDL
+		AerofoilPortable
+		PortabilityLayer
 		${SDL2_INCLUDE_DIRS}
 		)
 	if(PLATFORM STREQUAL "MAC")
@@ -283,7 +281,7 @@ if(CMAKE_HOST_UNIX)
 			AerofoilMac/AerofoilMac/MacInit.mm
 			)
 		list(APPEND EXEC_INC_DIRS
-			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/AerofoilMac/AerofoilMac>
+			AerofoilMac/AerofoilMac
 			)
 		list(APPEND EXEC_LIBS
 			"-framework Cocoa"
