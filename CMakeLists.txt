@@ -303,5 +303,14 @@ target_include_directories(flattenmov PRIVATE
 	)
 target_link_libraries(flattenmov PortabilityLayer)
 
+add_executable(bin2gp bin2gp/bin2gp.cpp AerofoilPortable/GpAllocator_C.cpp)
+target_include_directories(bin2gp PRIVATE
+	Common
+	GpCommon
+	PortabilityLayer
+	AerofoilPortable
+	)
+target_link_libraries(bin2gp PortabilityLayer)
+
 
 install (TARGETS ${EXECNAME})
