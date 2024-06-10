@@ -294,4 +294,14 @@ if(CMAKE_HOST_UNIX)
 endif()
 
 
+add_executable(flattenmov flattenmov/flattenmov.cpp AerofoilPortable/GpAllocator_C.cpp)
+target_include_directories(flattenmov PRIVATE
+	Common
+	GpCommon
+	PortabilityLayer
+	AerofoilPortable
+	)
+target_link_libraries(flattenmov PortabilityLayer)
+
+
 install (TARGETS ${EXECNAME})
