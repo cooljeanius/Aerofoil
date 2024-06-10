@@ -31,9 +31,9 @@
 #include <stdio.h>
 #include <string>
 #include <sstream>
+#include <utility>
 #include <vector>
 #include <algorithm>
-#include "GpWindows.h"
 
 enum AudioCompressionCodecID
 {
@@ -2432,14 +2432,11 @@ int ConvertSingleFile(const char *resPath, const PortabilityLayer::CombinedTimes
 		const size_t numRefs = typeList.m_numRefs;
 
 		{
-			char subName[256];
-			sprintf_s(subName, "%s", resTag.m_id);
-
 			PlannedEntry entry;
-			entry.m_name = subName;
+			entry.m_name = resTag.m_id;
 			entry.m_isDirectory = true;
 
-			contents.push_back(entry);
+			contents.push_back(std::move(entry));
 		}
 
 		for (size_t rlIndex = 0; rlIndex < numRefs; rlIndex++)
@@ -2458,14 +2455,15 @@ int ConvertSingleFile(const char *resPath, const PortabilityLayer::CombinedTimes
 
 			if (typeList.m_resType == pictTypeID || typeList.m_resType == dateTypeID)
 			{
-				char resName[256];
-				sprintf_s(resName, "%s/%i.bmp", resTag.m_id, static_cast<int>(res.m_resID));
+				std::string resName = (
+					std::ostringstream() << resTag.m_id << '/' << res.m_resID << ".bmp"
+				).str();
 
-				if (ContainsName(reservedNames, resName))
+				if (ContainsName(reservedNames, resName.c_str()))
 					continue;
 
 				PlannedEntry entry;
-				entry.m_name = resName;
+				entry.m_name = std::move(resName);
 				entry.m_comment = resComment;
 
 				if (ImportPICT(entry.m_uncompressedContents, resData, resSize, dumpqtDir, res.m_resID))
@@ -2475,14 +2473,15 @@ int ConvertSingleFile(const char *resPath, const PortabilityLayer::CombinedTimes
 			}
 			else if (typeList.m_resType == sndTypeID)
 			{
-				char resName[256];
-				sprintf_s(resName, "%s/%i.wav", resTag.m_id, static_cast<int>(res.m_resID));
+				std::string resName = (
+					std::ostringstream() << resTag.m_id << '/' << res.m_resID << ".wav"
+				).str();
 
-				if (ContainsName(reservedNames, resName))
+				if (ContainsName(reservedNames, resName.c_str()))
 					continue;
 
 				PlannedEntry entry;
-				entry.m_name = resName;
+				entry.m_name = std::move(resName);
 				entry.m_comment = resComment;
 
 				if (ImportSound(entry.m_uncompressedContents, resData, resSize, res.m_resID))
@@ -2492,14 +2491,15 @@ int ConvertSingleFile(const char *resPath, const PortabilityLayer::CombinedTimes
 			}
 			else if (typeList.m_resType == indexStringTypeID)
 			{
-				char resName[256];
-				sprintf_s(resName, "%s/%i.txt", resTag.m_id, static_cast<int>(res.m_resID));
+				std::string resName = (
+					std::ostringstream() << resTag.m_id << '/' << res.m_resID << ".txt"
+				).str();
 
-				if (ContainsName(reservedNames, resName))
+				if (ContainsName(reservedNames, resName.c_str()))
 					continue;
 
 				PlannedEntry entry;
-				entry.m_name = resName;
+				entry.m_name = std::move(resName);
 				entry.m_comment = resComment;
 
 				if (ImportIndexedString(entry.m_uncompressedContents, resData, resSize))
@@ -2507,14 +2507,15 @@ int ConvertSingleFile(const char *resPath, const PortabilityLayer::CombinedTimes
 			}
 			else if (typeList.m_resType == ditlTypeID)
 			{
-				char resName[256];
-				sprintf_s(resName, "%s/%i.json", resTag.m_id, static_cast<int>(res.m_resID));
+				std::string resName = (
+					std::ostringstream() << resTag.m_id << '/' << res.m_resID << ".json"
+				).str();
 
-				if (ContainsName(reservedNames, resName))
+				if (ContainsName(reservedNames, resName.c_str()))
 					continue;
 
 				PlannedEntry entry;
-				entry.m_name = resName;
+				entry.m_name = std::move(resName);
 				entry.m_comment = resComment;
 
 				if (ImportDialogItemTemplate(entry.m_uncompressedContents, resData, resSize))
@@ -2529,15 +2530,16 @@ int ConvertSingleFile(const char *resPath, const PortabilityLayer::CombinedTimes
 					const IconTypeSpec &iconSpec = iconTypeSpecs[i];
 					if (typeList.m_resType == iconSpec.m_resTypeID)
 					{
-						char resName[256];
-						sprintf_s(resName, "%s/%i.bmp", resTag.m_id, static_cast<int>(res.m_resID));
+						std::string resName = (
+							std::ostringstream() << resTag.m_id << '/' << res.m_resID << ".bmp"
+						).str();
 
-						if (!ContainsName(reservedNames, resName))
+						if (!ContainsName(reservedNames, resName.c_str()))
 						{
 							isIcon = true;
 
 							PlannedEntry entry;
-							entry.m_name = resName;
+							entry.m_name = std::move(resName);
 							entry.m_comment = resComment;
 
 							if (ImportIcon(entry.m_uncompressedContents, resData, resSize, iconSpec.m_width, iconSpec.m_height, iconSpec.m_bpp))
@@ -2550,15 +2552,16 @@ int ConvertSingleFile(const char *resPath, const PortabilityLayer::CombinedTimes
 
 				if (!isIcon)
 				{
-					char resName[256];
-					sprintf_s(resName, "%s/%i.bin", resTag.m_id, static_cast<int>(res.m_resID));
+					std::string resName = (
+						std::ostringstream() << resTag.m_id << '/' << res.m_resID << ".bin"
+					).str();
 
-					if (ContainsName(reservedNames, resName))
+					if (ContainsName(reservedNames, resName.c_str()))
 						continue;
 
 					PlannedEntry entry;
 
-					entry.m_name = resName;
+					entry.m_name = std::move(resName);
 					entry.m_comment = resComment;
 					entry.m_uncompressedContents.resize(res.GetSize());
 

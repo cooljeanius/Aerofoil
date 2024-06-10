@@ -335,5 +335,23 @@ target_include_directories(hqx2gp PRIVATE
 	)
 target_link_libraries(hqx2gp PortabilityLayer)
 
+add_executable(gpr2gpa
+	gpr2gpa/gpr2gpa.cpp
+	gpr2gpa/macedec.cpp
+	AerofoilPortable/GpAllocator_C.cpp
+	WindowsUnicodeToolShim/UnixUnicodeToolShim.cpp
+	)
+target_include_directories(gpr2gpa PRIVATE
+	Common
+	GpCommon
+	PortabilityLayer
+	AerofoilPortable
+	MacRomanConversion
+	WindowsUnicodeToolShim
+	rapidjson/include
+	zlib
+	)
+target_link_libraries(gpr2gpa PortabilityLayer MacRomanConversion zlib)
+
 
 install (TARGETS ${EXECNAME})
