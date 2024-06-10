@@ -1471,7 +1471,7 @@ bool DecompressSound(int compressionID, int channelCount, const void *sndData, s
 			}
 		}
 	}
-	else if (compressionID = AudioCompressionCodecID_SixToOne)
+	else if (compressionID == AudioCompressionCodecID_SixToOne)
 	{
 		if (channelCount != 1)
 		{
