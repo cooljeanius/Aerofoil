@@ -387,5 +387,14 @@ target_include_directories(MergeGPF PRIVATE
 	)
 target_link_libraries(MergeGPF PortabilityLayer)
 
+add_executable(MiniRez MiniRez/MiniRez.cpp WindowsUnicodeToolShim/UnixUnicodeToolShim.cpp)
+target_include_directories(MiniRez PRIVATE
+	Common
+	GpCommon
+	PortabilityLayer
+	WindowsUnicodeToolShim
+	)
+target_link_libraries(MiniRez PortabilityLayer)
+
 
 install (TARGETS ${EXECNAME})
