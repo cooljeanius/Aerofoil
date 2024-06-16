@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string>
-#include <Windows.h>
+
 #include "MacFileInfo.h"
 #include "CFileStream.h"
 #include "CombinedTimestamp.h"

@@ -363,5 +363,15 @@ add_executable(MakeTimestamp MakeTimestamp/MakeTimestamp.cpp)
 target_include_directories(MakeTimestamp PRIVATE PortabilityLayer)
 target_link_libraries(MakeTimestamp PortabilityLayer)
 
+add_executable(FTagData FTagData/FTagData.cpp WindowsUnicodeToolShim/UnixUnicodeToolShim.cpp)
+target_include_directories(FTagData PRIVATE
+	Common
+	GpCommon
+	PortabilityLayer
+	AerofoilPortable
+	WindowsUnicodeToolShim
+	)
+target_link_libraries(FTagData PortabilityLayer)
+
 
 install (TARGETS ${EXECNAME})
