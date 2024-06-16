@@ -1,3 +1,5 @@
+#include <climits>
+
 #include "PrefixCode.h"
 
 struct XADCodeTreeNode

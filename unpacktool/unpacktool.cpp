@@ -28,9 +28,6 @@
 
 #include <string.h>
 
-#include <Windows.h>
-#include <shellapi.h>
-
 #include <string>
 #include <vector>
 
@@ -387,7 +384,7 @@ int ExtractItem(int depth, const ArchiveItem &item, const std::string &dirPath, 
 	{
 		mkdir_utf8(path.c_str());
 
-		path.append("\\");
+		path.append("/");
 
 		int returnCode = RecursiveExtractFiles(depth + 1, item.m_children, path, pathParanoid, reader, ts);
 		if (returnCode)

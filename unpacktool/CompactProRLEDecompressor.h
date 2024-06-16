@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 #include "IDecompressor.h"
 
 class CompactProRLEDecompressor : public IDecompressor

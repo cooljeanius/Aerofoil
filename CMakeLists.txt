@@ -406,5 +406,40 @@ target_include_directories(HouseTool PRIVATE
 	)
 target_link_libraries(HouseTool PortabilityLayer MacRomanConversion)
 
+add_executable(unpacktool
+	unpacktool/ArchiveDescription.cpp
+	unpacktool/BWT.cpp
+	unpacktool/CompactProLZHDecompressor.cpp
+	unpacktool/CompactProLZHRLEDecompressor.cpp
+	unpacktool/CompactProParser.cpp
+	unpacktool/CompactProRLEDecompressor.cpp
+	unpacktool/CRC.cpp
+	unpacktool/CSInputBuffer.cpp
+	unpacktool/DecompressorProxyReader.cpp
+	unpacktool/LZSSDecompressor.cpp
+	unpacktool/LZW.cpp
+	unpacktool/LZWDecompressor.cpp
+	unpacktool/NullDecompressor.cpp
+	unpacktool/PrefixCode.cpp
+	unpacktool/RLE90Decompressor.cpp
+	unpacktool/StringCommon.cpp
+	unpacktool/StuffIt13Decompressor.cpp
+	unpacktool/StuffIt5Parser.cpp
+	unpacktool/StuffItArsenicDecompressor.cpp
+	unpacktool/StuffItCommon.cpp
+	unpacktool/StuffItHuffmanDecompressor.cpp
+	unpacktool/StuffItParser.cpp
+	unpacktool/unpacktool.cpp
+	WindowsUnicodeToolShim/UnixUnicodeToolShim.cpp
+	)
+target_include_directories(unpacktool PRIVATE
+	Common
+	GpCommon
+	PortabilityLayer
+	MacRomanConversion
+	WindowsUnicodeToolShim
+	)
+target_link_libraries(unpacktool PortabilityLayer MacRomanConversion)
+
 
 install (TARGETS ${EXECNAME})

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 #include "IDecompressor.h"
 
 class RLE90Decompressor : public IDecompressor
