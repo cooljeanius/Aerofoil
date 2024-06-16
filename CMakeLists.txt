@@ -442,4 +442,20 @@ target_include_directories(unpacktool PRIVATE
 target_link_libraries(unpacktool PortabilityLayer MacRomanConversion)
 
 
+find_package(Freetype)
+if(FREETYPE_FOUND)
+	add_library(GpFontHandler_FreeType2 STATIC
+		GpFontHandler_FreeType2/GpFontHandler_FreeType2.cpp
+		)
+
+	target_include_directories(GpFontHandler_FreeType2 PRIVATE
+		Common
+		GpCommon
+		"${FREETYPE_INCLUDE_DIR_ft2build}"
+		)
+
+	target_link_libraries(GpFontHandler_FreeType2 PRIVATE Freetype::Freetype)
+endif()
+
+
 install (TARGETS ${EXECNAME})
