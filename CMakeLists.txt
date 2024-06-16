@@ -373,5 +373,19 @@ target_include_directories(FTagData PRIVATE
 	)
 target_link_libraries(FTagData PortabilityLayer)
 
+add_executable(MergeGPF
+	MergeGPF/MergeGPF.cpp
+	AerofoilPortable/GpAllocator_C.cpp
+	WindowsUnicodeToolShim/UnixUnicodeToolShim.cpp
+	)
+target_include_directories(MergeGPF PRIVATE
+	Common
+	GpCommon
+	PortabilityLayer
+	AerofoilPortable
+	WindowsUnicodeToolShim
+	)
+target_link_libraries(MergeGPF PortabilityLayer)
+
 
 install (TARGETS ${EXECNAME})
