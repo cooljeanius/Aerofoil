@@ -396,5 +396,15 @@ target_include_directories(MiniRez PRIVATE
 	)
 target_link_libraries(MiniRez PortabilityLayer)
 
+add_executable(HouseTool HouseTool/HouseTool.cpp WindowsUnicodeToolShim/UnixUnicodeToolShim.cpp)
+target_include_directories(HouseTool PRIVATE
+	Common
+	GpCommon
+	PortabilityLayer
+	MacRomanConversion
+	WindowsUnicodeToolShim
+	)
+target_link_libraries(HouseTool PortabilityLayer MacRomanConversion)
+
 
 install (TARGETS ${EXECNAME})
