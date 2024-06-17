@@ -455,6 +455,21 @@ if(FREETYPE_FOUND)
 		)
 
 	target_link_libraries(GpFontHandler_FreeType2 PRIVATE Freetype::Freetype)
+
+
+	add_executable(GenerateFonts
+		GenerateFonts/GenerateFonts.cpp
+		AerofoilPortable/GpAllocator_C.cpp
+		WindowsUnicodeToolShim/UnixUnicodeToolShim.cpp
+		)
+	target_include_directories(GenerateFonts PRIVATE
+		Common
+		GpCommon
+		PortabilityLayer
+		AerofoilPortable
+		WindowsUnicodeToolShim
+		)
+	target_link_libraries(GenerateFonts PortabilityLayer GpFontHandler_FreeType2)
 endif()
 
 

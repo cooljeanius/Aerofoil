@@ -1,3 +1,7 @@
+#include <algorithm>
+#include <string>
+#include <vector>
+
 #include "FontFamily.h"
 #include "FontManager.h"
 #include "FontRenderer.h"
@@ -7,8 +11,6 @@
 #include "GpAppInterface.h"
 #include "GpDriverIndex.h"
 #include "GpFontHandlerProperties.h"
-#include "GpFileSystem_Win32.h"
-#include "GpSystemServices_Win32.h"
 #include "CFileStream.h"
 
 #include "PLDrivers.h"
@@ -17,7 +19,11 @@
 
 #include "WindowsUnicodeToolShim.h"
 
-extern "C" __declspec(dllimport) IGpFontHandler *GpDriver_CreateFontHandler_FreeType2(const GpFontHandlerProperties &properties);
+extern "C"
+#ifdef _MSC_VER
+__declspec(dllimport)
+#endif
+IGpFontHandler *GpDriver_CreateFontHandler_FreeType2(const GpFontHandlerProperties &properties);
 
 class MemBufferStream final : public GpIOStream
 {
@@ -168,6 +174,16 @@ bool KnownFontSpec::operator!=(const KnownFontSpec &other) const
 
 int toolMain(int argc, const char **argv)
 {
+	if (argc < 3)
+	{
+		fputs("Usage: GenerateFonts <resources dir> <output dir>\n", stderr);
+		return -1;
+	}
+	std::string resourcesDir(argv[1]);
+	resourcesDir += '/';
+	std::string outputDir(argv[2]);
+	outputDir += '/';
+
 	IGpAllocator *alloc = GpAllocator_C::GetInstance();
 
 	GpFontHandlerProperties fhProperties;
@@ -187,12 +203,13 @@ int toolMain(int argc, const char **argv)
 	std::vector<PortabilityLayer::RenderedFontCatalogRFontEntry> catalog;
 	std::vector<KnownFontSpec> fontSpecs;
 
-	FILE *manifestF = fopen_utf8("Packaged/FontCacheManifest.json", "wb");
+	std::string tmpPath(outputDir + "FontCacheManifest.json");
+	FILE *manifestF = fopen_utf8(tmpPath.c_str(), "wb");
 
 	fprintf(manifestF, "{\n");
 	fprintf(manifestF, "\t\"add\" :\n");
 	fprintf(manifestF, "\t{\n");
-	fprintf(manifestF, "\t\t\"RFCT/1000.bin\" : \"Packaged/FontCacheCatalog.bin\"");
+	fprintf(manifestF, "\t\t\"RFCT/1000.bin\" : \"%sFontCacheCatalog.bin\"", outputDir.c_str());
 
 	int numFontsEmitted = 0;
 	for (int presetIndex = 0; presetIndex < PortabilityLayer::FontPresets::kCount; presetIndex++)
@@ -220,8 +237,9 @@ int toolMain(int argc, const char **argv)
 
 		fontSpecs.push_back(spec);
 
-		std::string resPath = std::string("Resources/") + path;
-		FILE *fontFile = fopen_utf8(resPath.c_str(), "rb");
+		tmpPath = resourcesDir;
+		tmpPath += path;
+		FILE *fontFile = fopen_utf8(tmpPath.c_str(), "rb");
 
 		if (fontFile)
 		{
@@ -236,7 +254,7 @@ int toolMain(int argc, const char **argv)
 
 			{
 				char fontPath[1024];
-				sprintf(fontPath, "Packaged/CachedFont%i.bin", numFontsEmitted);
+				sprintf(fontPath, "%sCachedFont%i.bin", outputDir.c_str(), numFontsEmitted);
 
 				FILE *cachedFontF = fopen_utf8(fontPath, "wb");
 				PortabilityLayer::CFileStream cacheStream(cachedFontF);
@@ -290,7 +308,9 @@ int toolMain(int argc, const char **argv)
 
 	PortabilityLayer::RenderedFontCatalogHeader catHeader;
 
-	FILE *catF = fopen_utf8("Packaged/FontCacheCatalog.bin", "wb");
+	tmpPath = outputDir;
+	tmpPath += "FontCacheCatalog.bin";
+	FILE *catF = fopen_utf8(tmpPath.c_str(), "wb");
 
 	catHeader.m_version = PortabilityLayer::RenderedFontCatalogHeader::kVersion;
 	catHeader.m_pathsOffset = static_cast<uint32_t>(sizeof(PortabilityLayer::RenderedFontCatalogHeader) + paths.size() * sizeof(PortabilityLayer::RenderedFontCatalogPathEntry) + numFontsEmitted * sizeof(PortabilityLayer::RenderedFontCatalogRFontEntry));

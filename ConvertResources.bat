@@ -8,7 +8,7 @@ x64\Release\gpr2gpa.exe "Packaged\ApplicationResources.gpr" "DefaultTimestamp.ti
 x64\Release\FTagData.exe "DefaultTimestamp.timestamp" "Packaged\ApplicationResources.gpf" data ozm5 0 0 locked
 x64\Release\MergeGPF.exe "Packaged\ApplicationResources.gpf"
 
-x64\Release\GenerateFonts.exe
+x64\Release\GenerateFonts.exe Resources Packaged
 
 x64\Release\MiniRez.exe "Empty.r" Packaged\Fonts.gpr
 x64\Release\gpr2gpa.exe "Packaged\Fonts.gpr" "DefaultTimestamp.timestamp" "Packaged\Fonts.gpa" -patch "Packaged\FontCacheManifest.json"
