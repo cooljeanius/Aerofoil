@@ -489,4 +489,43 @@ target_include_directories(ConvertColorCursors PRIVATE
 target_link_libraries(ConvertColorCursors PortabilityLayer)
 
 
-install (TARGETS ${EXECNAME})
+file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/Packaged/Houses")
+
+set(DATA_FILES)
+
+list(APPEND DATA_FILES Packaged/ApplicationResources.gpf)
+add_custom_command(
+	OUTPUT
+		Packaged/ApplicationResources.gpf
+	BYPRODUCTS
+		Packaged/ApplicationResources.gpr
+		Packaged/ApplicationResources.gpa
+	DEPENDS MiniRez gpr2gpa FTagData MergeGPF
+	COMMAND MiniRez
+		"GliderProData/Glider PRO.r"
+		"${CMAKE_CURRENT_BINARY_DIR}/Packaged/ApplicationResources.gpr"
+	COMMAND gpr2gpa
+		"${CMAKE_CURRENT_BINARY_DIR}/Packaged/ApplicationResources.gpr"
+		DefaultTimestamp.timestamp
+		"${CMAKE_CURRENT_BINARY_DIR}/Packaged/ApplicationResources.gpa"
+		-patch ApplicationResourcePatches/manifest.json
+	COMMAND FTagData
+		DefaultTimestamp.timestamp
+		"${CMAKE_CURRENT_BINARY_DIR}/Packaged/ApplicationResources.gpf"
+		data ozm5 0 0 locked
+	COMMAND MergeGPF
+		"${CMAKE_CURRENT_BINARY_DIR}/Packaged/ApplicationResources.gpf"
+	WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+	VERBATIM
+	)
+
+add_custom_target(Resources ALL
+	DEPENDS
+		${DATA_FILES}
+	)
+
+
+list(TRANSFORM DATA_FILES PREPEND "${CMAKE_CURRENT_BINARY_DIR}/")
+
+install(TARGETS "${EXECNAME}" COMPONENT Executable)
+install(FILES ${DATA_FILES} DESTINATION lib/aerofoil/Packaged COMPONENT Resources)
