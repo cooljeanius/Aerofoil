@@ -559,6 +559,29 @@ add_custom_command(
 	VERBATIM
 	)
 
+# These files are committed to the repo and aren't currently useful on non-Windows systems anyway.
+#file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/Aerofoil/ConvertedResources)
+#
+#set(CONVERTED_ICONS
+#	Aerofoil/ConvertedResources/Large128.ico
+#	Aerofoil/ConvertedResources/Large129.ico
+#	Aerofoil/ConvertedResources/Large130.ico
+#	Aerofoil/ConvertedResources/Large131.ico
+#	Aerofoil/ConvertedResources/Large132.ico
+#	Aerofoil/ConvertedResources/Large133.ico
+#	Aerofoil/ConvertedResources/Small128.ico
+#	Aerofoil/ConvertedResources/Small129.ico
+#	Aerofoil/ConvertedResources/Small130.ico
+#	Aerofoil/ConvertedResources/Small133.ico
+#	)
+#
+#add_custom_command(
+#	OUTPUT ${CONVERTED_ICONS}
+#	DEPENDS ConvertColorCursors Packaged/ApplicationResources.gpr
+#	COMMAND ConvertColorCursors
+#	)
+#add_custom_target(Icons DEPENDS ${CONVERTED_ICONS})
+
 add_custom_target(Resources ALL
 	DEPENDS
 		${DATA_FILES}
