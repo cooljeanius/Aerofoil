@@ -519,6 +519,46 @@ add_custom_command(
 	VERBATIM
 	)
 
+list(APPEND DATA_FILES Packaged/Fonts.gpf)
+add_custom_command(
+	OUTPUT
+		Packaged/Fonts.gpf
+	BYPRODUCTS
+		Packaged/Fonts.gpr
+		Packaged/Fonts.gpa
+		Packaged/FontCacheCatalog.bin
+		Packaged/FontCacheManifest.json
+		Packaged/CachedFont0.bin
+		Packaged/CachedFont1.bin
+		Packaged/CachedFont2.bin
+		Packaged/CachedFont3.bin
+		Packaged/CachedFont4.bin
+		Packaged/CachedFont5.bin
+		Packaged/CachedFont6.bin
+		Packaged/CachedFont7.bin
+		Packaged/CachedFont8.bin
+		Packaged/CachedFont9.bin
+		Packaged/CachedFont10.bin
+		Packaged/CachedFont11.bin
+		Packaged/CachedFont12.bin
+		Packaged/CachedFont13.bin
+		Packaged/CachedFont14.bin
+	DEPENDS GenerateFonts MiniRez gpr2gpa FTagData MergeGPF
+	COMMAND GenerateFonts "${CMAKE_SOURCE_DIR}/Resources" Packaged
+	COMMAND MiniRez "${CMAKE_SOURCE_DIR}/Empty.r" Packaged/Fonts.gpr
+	COMMAND gpr2gpa
+		Packaged/Fonts.gpr
+		"${CMAKE_SOURCE_DIR}/DefaultTimestamp.timestamp"
+		Packaged/Fonts.gpa
+		-patch Packaged/FontCacheManifest.json
+	COMMAND FTagData
+		DefaultTimestamp.timestamp
+		Packaged/Fonts.gpf
+		data ozm5 0 0 locked
+	COMMAND MergeGPF Packaged/Fonts.gpf
+	VERBATIM
+	)
+
 add_custom_target(Resources ALL
 	DEPENDS
 		${DATA_FILES}
