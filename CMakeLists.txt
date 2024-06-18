@@ -472,5 +472,21 @@ if(FREETYPE_FOUND)
 	target_link_libraries(GenerateFonts PortabilityLayer GpFontHandler_FreeType2)
 endif()
 
+add_executable(ConvertColorCursors
+	ConvertColorCursors/ConvertColorCursors.cpp
+	AerofoilPortable/GpAllocator_C.cpp
+	stb/stb_image_write.c
+	WindowsUnicodeToolShim/UnixUnicodeToolShim.cpp
+	)
+target_include_directories(ConvertColorCursors PRIVATE
+	Common
+	GpCommon
+	PortabilityLayer
+	AerofoilPortable
+	stb
+	WindowsUnicodeToolShim
+	)
+target_link_libraries(ConvertColorCursors PortabilityLayer)
+
 
 install (TARGETS ${EXECNAME})

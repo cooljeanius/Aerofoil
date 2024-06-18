@@ -8,8 +8,11 @@
 #include "QDStandardPalette.h"
 #include "PLBigEndian.h"
 #include "PLDrivers.h"
-#include <assert.h>
+#include "WindowsUnicodeToolShim.h"
 
+#include <cassert>
+#include <cstdio>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -92,12 +95,12 @@ void ConvertIconFamily(PortabilityLayer::ResourceFile *resFile, int32_t iconBitm
 				item.a = 0;
 		}
 
-		char outPath[256];
-		sprintf_s(outPath, "Aerofoil\\ConvertedResources\\%s%i.ico", prefix, resID);
+		std::string outPath = (
+			std::ostringstream() << "Aerofoil/ConvertedResources/" << prefix << resID << ".ico"
+		).str();
 
-		FILE *outF = nullptr;
-		errno_t outErr = fopen_s(&outF, outPath, "wb");
-		if (!outErr)
+		FILE *outF = fopen_utf8(outPath.c_str(), "wb");
+		if (outF)
 		{
 			IconDir iconDir;
 			iconDir.m_reserved = 0;
@@ -127,6 +130,8 @@ void ConvertIconFamily(PortabilityLayer::ResourceFile *resFile, int32_t iconBitm
 			fwrite(&iconDirEntry, 1, sizeof(IconDirEntry), outF);
 			fclose(outF);
 		}
+		else
+			perror(outPath.c_str());
 
 		delete[] pixelData;
 		bwBlock.Dispose();
@@ -134,12 +139,14 @@ void ConvertIconFamily(PortabilityLayer::ResourceFile *resFile, int32_t iconBitm
 	}
 }
 
-int main(int argc, const char **argv)
+int toolMain(int argc, const char **argv)
 {
-	FILE *f = nullptr;
-	errno_t err = fopen_s(&f, "Packaged\\ApplicationResources.gpr", "rb");
-	if (err)
-		return err;
+	FILE *f = fopen_utf8("Packaged/ApplicationResources.gpr", "rb");
+	if (!f)
+	{
+		perror("Cannot open Packaged/ApplicationResources.gpr");
+		return -1;
+	}
 
 	PortabilityLayer::CFileStream stream(f);
 
