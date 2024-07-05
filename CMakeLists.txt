@@ -493,13 +493,36 @@ file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/Packaged/Houses")
 
 set(DATA_FILES)
 
-list(APPEND DATA_FILES Packaged/ApplicationResources.gpf)
-add_custom_command(
-	OUTPUT
-		Packaged/ApplicationResources.gpf
+function(add_data_file NAME)
+	list(APPEND DATA_FILES "Packaged/${NAME}")
+	set(DATA_FILES "${DATA_FILES}" PARENT_SCOPE)
+
+	cmake_parse_arguments(PARSE_ARGV 1 ARG
+		""
+		""
+		"BYPRODUCTS;COMMANDS"
+		)
+
+	if(ARG_BYPRODUCTS)
+		set(RM_BYPRODUCTS_COMMAND COMMAND "${CMAKE_COMMAND}" -E rm)
+		set(RM_BYPRODUCTS_PATHS "${ARG_BYPRODUCTS}")
+		list(TRANSFORM RM_BYPRODUCTS_PATHS PREPEND "${CMAKE_CURRENT_BINARY_DIR}/")
+	endif()
+
+	add_custom_command(
+		OUTPUT "Packaged/${NAME}"
+		BYPRODUCTS ${ARG_BYPRODUCTS}
+		${ARG_COMMANDS}
+		${RM_BYPRODUCTS_COMMAND} ${RM_BYPRODUCTS_PATHS}
+		VERBATIM
+		)
+endfunction()
+
+add_data_file(ApplicationResources.gpf
 	BYPRODUCTS
 		Packaged/ApplicationResources.gpr
 		Packaged/ApplicationResources.gpa
+	COMMANDS
 	DEPENDS MiniRez gpr2gpa FTagData MergeGPF
 	COMMAND MiniRez
 		"GliderProData/Glider PRO.r"
@@ -516,13 +539,9 @@ add_custom_command(
 	COMMAND MergeGPF
 		"${CMAKE_CURRENT_BINARY_DIR}/Packaged/ApplicationResources.gpf"
 	WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-	VERBATIM
 	)
 
-list(APPEND DATA_FILES Packaged/Fonts.gpf)
-add_custom_command(
-	OUTPUT
-		Packaged/Fonts.gpf
+add_data_file(Fonts.gpf
 	BYPRODUCTS
 		Packaged/Fonts.gpr
 		Packaged/Fonts.gpa
@@ -543,6 +562,7 @@ add_custom_command(
 		Packaged/CachedFont12.bin
 		Packaged/CachedFont13.bin
 		Packaged/CachedFont14.bin
+	COMMANDS
 	DEPENDS GenerateFonts MiniRez gpr2gpa FTagData MergeGPF
 	COMMAND GenerateFonts "${CMAKE_SOURCE_DIR}/Resources" Packaged
 	COMMAND MiniRez "${CMAKE_SOURCE_DIR}/Empty.r" Packaged/Fonts.gpr
@@ -556,7 +576,6 @@ add_custom_command(
 		Packaged/Fonts.gpf
 		data ozm5 0 0 locked
 	COMMAND MergeGPF Packaged/Fonts.gpf
-	VERBATIM
 	)
 
 # These files are committed to the repo and aren't currently useful on non-Windows systems anyway.
