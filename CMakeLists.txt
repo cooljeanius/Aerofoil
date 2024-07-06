@@ -5,6 +5,12 @@ SET(EXECNAME "AerofoilX" CACHE STRING "Defines the exec name")
 
 message(${CMAKE_BINARY_DIR})
 
+# FIXME: Clang treats this as an error by default; fixing the source rather
+# than downgrading the error to a warning would be a better solution.
+add_compile_options(
+	$<$<COMPILE_LANG_AND_ID:CXX,AppleClang,Clang>:-Wno-error=c++11-narrowing>
+	)
+
 find_package(SDL2 REQUIRED)
 
 if(PLATFORM STREQUAL "MAC")
