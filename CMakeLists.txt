@@ -5,6 +5,22 @@ SET(EXECNAME "AerofoilX" CACHE STRING "Defines the exec name")
 
 message(${CMAKE_BINARY_DIR})
 
+# Use Release build type by default
+if("${CMAKE_BUILD_TYPE}" STREQUAL "")
+	set(CMAKE_BUILD_TYPE Release)
+	message("Build type unspecified, using Release")
+endif()
+
+# Enable LTO by default if supported
+if("${CMAKE_INTERPROCEDURAL_OPTIMIZATION}" STREQUAL "")
+	include(CheckIPOSupported)
+	check_ipo_supported(RESULT IPO_SUPPORTED)
+	if(IPO_SUPPORTED)
+		set(CMAKE_INTERPROCEDURAL_OPTIMIZATION On)
+		message("Compiler supports LTO, enabling automatically")
+	endif()
+endif()
+
 # FIXME: Clang treats this as an error by default; fixing the source rather
 # than downgrading the error to a warning would be a better solution.
 add_compile_options(
