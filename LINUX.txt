@@ -1,18 +1,49 @@
-Linux support is IN ALPHA and may or may not work.  Only Cygwin has been
-tested so far.
+Linux support is IN ALPHA and may or may not work.
 
-You can attempt the following:
-- Install CMake (https://cmake.org/download/)
-- Install SDL 2.0.12 or higher, or build it from the included source
-- Run "cmake ." in the Aerofoil source directory
-- Run "make install" to build the AerofoilX program
-- Unzip the the Windows build
-- Copy the "Packaged" and "Resources" directories from the Windows build into
-  the "lib" folder above the "bin" folder that the AerofoilX program installed
-  to.  For example, if it installed to /usr/local/bin/, then the data files
-  should go in /usr/local/lib/aerofoil/
-- Run AerofoilX
+Use these basic steps to build and install Aerofoil:
+- Ensure dependencies are installed - all of these are likely available from
+  your distribution's package manager:
+    - CMake 3.10 or later (https://cmake.org/download/)
+    - SDL 2.0.12 or later (https://libsdl.org)
+    - FreeType 2.10.1 or later (https://freetype.org/download.html)
+- Change directory to the Aerofoil source root (the directory containing this file)
+- Run "cmake -B build" to create a CMake build tree under "build"
+- Run "cmake --build build" to build the AerofoilX program and its resources
+- Run "cmake --install build" to install everything under /usr/local
+- You can now run Aerofoil with the command "AerofoilX"
 
+You can also build just the AerofoilX executable and use the prebuilt resources
+from the Windows release:
+- Follow the steps above, ignoring the FreeType dependency and stopping after
+  running "cmake -B build"
+- Run "cmake --build build --target Executable" to build only the executable
+- Run "cmake --install build --component Executable" to install AerofoilX in
+  /usr/local/bin
+- Download the Windows build from
+  https://github.com/elasota/Aerofoil/releases/latest and unzip it
+- Create the directory /usr/local/lib/aerofoil and copy the "Packaged"
+  directory from the Windows build into it
+
+To install under a prefix other than /usr/local add
+"-DCMAKE_INSTALL_PREFIX=<prefix>" to "cmake -B build"
+
+Tools for converting Glider PRO houses are installed under
+/usr/local/lib/aerofoil/tools, see Documentation/userhouses.txt for
+instructions on how to use them.
+
+The main AerofoilX executable, its required resources and the conversion tools
+can be built and installed individually via these build targets and install
+components:
+- Executable
+- Resources
+- Tools
+
+For instance, you can use
+    cmake --build build --target Executable Resources
+to build only Aerofoil and its resources, and
+    cmake --install build --component Executable
+    cmake --install build --component Resources
+to install them.
 
 Please report any issues that you experience with this to the issue tracker on
 GitHub.
