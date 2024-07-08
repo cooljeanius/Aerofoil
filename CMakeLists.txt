@@ -582,13 +582,113 @@ add_custom_command(
 #	)
 #add_custom_target(Icons DEPENDS ${CONVERTED_ICONS})
 
+set(HOUSE_FILES)
+
+function(add_house NAME)
+	cmake_parse_arguments(PARSE_ARGV 0 ARG
+		""
+		PATCH
+		""
+		)
+
+	if(ARG_PATCH)
+		set(PATCH_ARGS -patch "${CMAKE_SOURCE_DIR}/HousePatches/${ARG_PATCH}")
+	endif()
+
+	set(BASE_PATH "Packaged/Houses/${NAME}")
+	list(APPEND HOUSE_FILES "${BASE_PATH}.gpf")
+
+	set(BYPRODUCTS "${BASE_PATH}.gpr" "${BASE_PATH}.gpa" "${BASE_PATH}.gpd")
+
+	add_custom_command(
+		OUTPUT
+			"${BASE_PATH}.gpf"
+		BYPRODUCTS
+			${BYPRODUCTS}
+		DEPENDS hqx2gp gpr2gpa MergeGPF
+		COMMAND hqx2gp
+			"${CMAKE_SOURCE_DIR}/GliderProData/Houses/${NAME}.binhex"
+			"${CMAKE_SOURCE_DIR}/DefaultTimestamp.timestamp"
+			"${BASE_PATH}"
+		COMMAND gpr2gpa
+			"${BASE_PATH}.gpr"
+			"${CMAKE_SOURCE_DIR}/DefaultTimestamp.timestamp"
+			"${BASE_PATH}.gpa"
+			${PATCH_ARGS}
+		${HOUSE_EXTRA_COMMANDS}
+		COMMAND MergeGPF
+			"${BASE_PATH}.gpf"
+		COMMAND "${CMAKE_COMMAND}" -E rm
+			${BYPRODUCTS}
+		VERBATIM
+		)
+
+	set(MOV_GPA_SRC "${CMAKE_SOURCE_DIR}/GliderProData/ConvertedMovies/${NAME}.mov.gpa")
+	if(EXISTS "${MOV_GPA_SRC}")
+		list(APPEND HOUSE_FILES "${BASE_PATH}.mov.gpf")
+
+		add_custom_command(
+			OUTPUT
+				"${BASE_PATH}.mov.gpf"
+			BYPRODUCTS
+				"${BASE_PATH}.mov.gpa"
+			DEPENDS FTagData MergeGPF "${MOV_GPA_SRC}"
+			COMMAND FTagData
+				"${CMAKE_SOURCE_DIR}/DefaultTimestamp.timestamp"
+				"${BASE_PATH}.mov.gpf"
+				MooV ozm5 0 0 locked
+			COMMAND "${CMAKE_COMMAND}" -E copy
+				-t "Packaged/Houses"
+				"${MOV_GPA_SRC}"
+			COMMAND MergeGPF
+				"${BASE_PATH}.mov.gpf"
+			COMMAND "${CMAKE_COMMAND}" -E rm
+				"${BASE_PATH}.mov.gpa"
+			VERBATIM
+			)
+	endif()
+	set(HOUSE_FILES "${HOUSE_FILES}" PARENT_SCOPE)
+endfunction()
+
+add_house("Art Museum")
+add_house("California or Bust!")
+
+set(HOUSE_EXTRA_COMMANDS
+	DEPENDS HouseTool
+	COMMAND HouseTool
+		patch "Packaged/Houses/Castle o' the Air.gpd" .firstRoom 77
+	)
+add_house("Castle o' the Air")
+unset(HOUSE_EXTRA_COMMANDS)
+
+add_house("CD Demo House")
+add_house("Davis Station")
+add_house("Demo House")
+add_house("Fun House")
+add_house("Grand Prix" PATCH "GrandPrix.json")
+add_house("ImagineHouse PRO II" PATCH "ImagineHousePROII.json")
+add_house("In The Mirror" PATCH "InTheMirror.json")
+add_house("Land of Illusion")
+add_house("Leviathan" PATCH "Leviathan.json")
+add_house("Metropolis")
+add_house("Nemo's Market")
+add_house("Rainbow's End" PATCH "RainbowsEnd.json")
+add_house("Slumberland")
+add_house("SpacePods")
+add_house("Teddy World")
+add_house("The Asylum Pro")
+add_house("Titanic")
+
 add_custom_target(Resources ALL
 	DEPENDS
 		${DATA_FILES}
+		${HOUSE_FILES}
 	)
 
 
 list(TRANSFORM DATA_FILES PREPEND "${CMAKE_CURRENT_BINARY_DIR}/")
+list(TRANSFORM HOUSE_FILES PREPEND "${CMAKE_CURRENT_BINARY_DIR}/")
 
 install(TARGETS "${EXECNAME}" COMPONENT Executable)
 install(FILES ${DATA_FILES} DESTINATION lib/aerofoil/Packaged COMPONENT Resources)
+install(FILES ${HOUSE_FILES} DESTINATION lib/aerofoil/Packaged/Houses COMPONENT Resources)
