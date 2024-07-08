@@ -714,6 +714,8 @@ add_house("Teddy World")
 add_house("The Asylum Pro")
 add_house("Titanic")
 
+add_custom_target(Executable DEPENDS "${EXECNAME}")
+
 add_custom_target(Resources ALL
 	DEPENDS
 		${DATA_FILES}
