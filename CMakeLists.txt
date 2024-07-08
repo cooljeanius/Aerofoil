@@ -316,7 +316,7 @@ if(CMAKE_HOST_UNIX)
 endif()
 
 
-add_executable(flattenmov flattenmov/flattenmov.cpp AerofoilPortable/GpAllocator_C.cpp)
+add_executable(flattenmov EXCLUDE_FROM_ALL flattenmov/flattenmov.cpp AerofoilPortable/GpAllocator_C.cpp)
 target_include_directories(flattenmov PRIVATE
 	Common
 	GpCommon
@@ -325,7 +325,7 @@ target_include_directories(flattenmov PRIVATE
 	)
 target_link_libraries(flattenmov PortabilityLayer)
 
-add_executable(bin2gp bin2gp/bin2gp.cpp AerofoilPortable/GpAllocator_C.cpp)
+add_executable(bin2gp EXCLUDE_FROM_ALL bin2gp/bin2gp.cpp AerofoilPortable/GpAllocator_C.cpp)
 target_include_directories(bin2gp PRIVATE
 	Common
 	GpCommon
@@ -334,7 +334,7 @@ target_include_directories(bin2gp PRIVATE
 	)
 target_link_libraries(bin2gp PortabilityLayer)
 
-add_executable(hqx2bin hqx2bin/hqx2bin.cpp AerofoilPortable/GpAllocator_C.cpp)
+add_executable(hqx2bin EXCLUDE_FROM_ALL hqx2bin/hqx2bin.cpp AerofoilPortable/GpAllocator_C.cpp)
 target_include_directories(hqx2bin PRIVATE
 	Common
 	GpCommon
@@ -343,7 +343,7 @@ target_include_directories(hqx2bin PRIVATE
 	)
 target_link_libraries(hqx2bin PortabilityLayer)
 
-add_executable(hqx2gp
+add_executable(hqx2gp EXCLUDE_FROM_ALL
 	hqx2gp/hqx2gp.cpp
 	AerofoilPortable/GpAllocator_C.cpp
 	WindowsUnicodeToolShim/UnixUnicodeToolShim.cpp
@@ -357,7 +357,7 @@ target_include_directories(hqx2gp PRIVATE
 	)
 target_link_libraries(hqx2gp PortabilityLayer)
 
-add_executable(gpr2gpa
+add_executable(gpr2gpa EXCLUDE_FROM_ALL
 	gpr2gpa/gpr2gpa.cpp
 	gpr2gpa/macedec.cpp
 	AerofoilPortable/GpAllocator_C.cpp
@@ -375,11 +375,14 @@ target_include_directories(gpr2gpa PRIVATE
 	)
 target_link_libraries(gpr2gpa PortabilityLayer MacRomanConversion zlib)
 
-add_executable(MakeTimestamp MakeTimestamp/MakeTimestamp.cpp)
+add_executable(MakeTimestamp EXCLUDE_FROM_ALL MakeTimestamp/MakeTimestamp.cpp)
 target_include_directories(MakeTimestamp PRIVATE PortabilityLayer)
 target_link_libraries(MakeTimestamp PortabilityLayer)
 
-add_executable(FTagData FTagData/FTagData.cpp WindowsUnicodeToolShim/UnixUnicodeToolShim.cpp)
+add_executable(FTagData EXCLUDE_FROM_ALL
+	FTagData/FTagData.cpp
+	WindowsUnicodeToolShim/UnixUnicodeToolShim.cpp
+	)
 target_include_directories(FTagData PRIVATE
 	Common
 	GpCommon
@@ -389,7 +392,7 @@ target_include_directories(FTagData PRIVATE
 	)
 target_link_libraries(FTagData PortabilityLayer)
 
-add_executable(MergeGPF
+add_executable(MergeGPF EXCLUDE_FROM_ALL
 	MergeGPF/MergeGPF.cpp
 	AerofoilPortable/GpAllocator_C.cpp
 	WindowsUnicodeToolShim/UnixUnicodeToolShim.cpp
@@ -403,7 +406,7 @@ target_include_directories(MergeGPF PRIVATE
 	)
 target_link_libraries(MergeGPF PortabilityLayer)
 
-add_executable(MiniRez MiniRez/MiniRez.cpp WindowsUnicodeToolShim/UnixUnicodeToolShim.cpp)
+add_executable(MiniRez EXCLUDE_FROM_ALL MiniRez/MiniRez.cpp WindowsUnicodeToolShim/UnixUnicodeToolShim.cpp)
 target_include_directories(MiniRez PRIVATE
 	Common
 	GpCommon
@@ -412,7 +415,10 @@ target_include_directories(MiniRez PRIVATE
 	)
 target_link_libraries(MiniRez PortabilityLayer)
 
-add_executable(HouseTool HouseTool/HouseTool.cpp WindowsUnicodeToolShim/UnixUnicodeToolShim.cpp)
+add_executable(HouseTool EXCLUDE_FROM_ALL
+	HouseTool/HouseTool.cpp
+	WindowsUnicodeToolShim/UnixUnicodeToolShim.cpp
+	)
 target_include_directories(HouseTool PRIVATE
 	Common
 	GpCommon
@@ -422,7 +428,7 @@ target_include_directories(HouseTool PRIVATE
 	)
 target_link_libraries(HouseTool PortabilityLayer MacRomanConversion)
 
-add_executable(unpacktool
+add_executable(unpacktool EXCLUDE_FROM_ALL
 	unpacktool/ArchiveDescription.cpp
 	unpacktool/BWT.cpp
 	unpacktool/CompactProLZHDecompressor.cpp
@@ -473,7 +479,7 @@ if(FREETYPE_FOUND)
 	target_link_libraries(GpFontHandler_FreeType2 PRIVATE Freetype::Freetype)
 
 
-	add_executable(GenerateFonts
+	add_executable(GenerateFonts EXCLUDE_FROM_ALL
 		GenerateFonts/GenerateFonts.cpp
 		AerofoilPortable/GpAllocator_C.cpp
 		WindowsUnicodeToolShim/UnixUnicodeToolShim.cpp
@@ -488,7 +494,7 @@ if(FREETYPE_FOUND)
 	target_link_libraries(GenerateFonts PortabilityLayer GpFontHandler_FreeType2)
 endif()
 
-add_executable(ConvertColorCursors
+add_executable(ConvertColorCursors EXCLUDE_FROM_ALL
 	ConvertColorCursors/ConvertColorCursors.cpp
 	AerofoilPortable/GpAllocator_C.cpp
 	stb/stb_image_write.c
@@ -722,6 +728,19 @@ add_custom_target(Resources ALL
 		${HOUSE_FILES}
 	)
 
+set(TOOL_EXES
+	flattenmov
+	bin2gp
+	hqx2bin
+	hqx2gp
+	MakeTimestamp
+	FTagData
+	gpr2gpa
+	unpacktool
+	MergeGPF
+	)
+add_custom_target(Tools ALL DEPENDS ${TOOL_EXES})
+
 
 list(TRANSFORM DATA_FILES PREPEND "${CMAKE_CURRENT_BINARY_DIR}/")
 list(TRANSFORM HOUSE_FILES PREPEND "${CMAKE_CURRENT_BINARY_DIR}/")
@@ -729,3 +748,4 @@ list(TRANSFORM HOUSE_FILES PREPEND "${CMAKE_CURRENT_BINARY_DIR}/")
 install(TARGETS "${EXECNAME}" COMPONENT Executable)
 install(FILES ${DATA_FILES} DESTINATION lib/aerofoil/Packaged COMPONENT Resources)
 install(FILES ${HOUSE_FILES} DESTINATION lib/aerofoil/Packaged/Houses COMPONENT Resources)
+install(TARGETS ${TOOL_EXES} DESTINATION lib/aerofoil/tools COMPONENT Tools)
