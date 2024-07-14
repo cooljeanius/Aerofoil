@@ -8,15 +8,15 @@ else {
 }
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion 34
     defaultConfig {
         if (buildAsApplication) {
             applicationId "org.thecodedeposit.aerofoil"
         }
         minSdkVersion 16
-        targetSdkVersion 33
-        versionCode 18
-        versionName "1.1.4"
+        targetSdkVersion 34
+        versionCode 19
+        versionName "1.1.5"
         externalNativeBuild {
             ndkBuild {
                 arguments "APP_PLATFORM=android-16"
@@ -33,6 +33,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
         }
     }
     if (!project.hasProperty('EXCLUDE_NATIVE_LIBS')) {

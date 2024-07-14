@@ -58,11 +58,6 @@ public class GpActivity extends SDLActivity
                     ParcelFileDescriptor fd = contentResolver.openFileDescriptor(uri, "w");
                     GpFileSystemAPI.nativePostSourceExportRequest(false, fd.getFd(), fd);
                 }
-                catch (FileNotFoundException e)
-                {
-                    GpFileSystemAPI.nativePostSourceExportRequest(true, 0, null);
-                    return;
-                }
                 catch (IOException e)
                 {
                     GpFileSystemAPI.nativePostSourceExportRequest(true, 0, null);
