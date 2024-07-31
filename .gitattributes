@@ -1,0 +1,31 @@
+.editorconfig text
+.gitattributes text
+.gitignore text
+.gitmodules text
+
+*.txt text
+
+*.cmake text
+Makefile text
+README text
+
+*.bat text eol=crlf
+
+*.c text
+*.cpp text
+*.h text
+*.mm text
+
+*.gradle text
+*.java text
+*.mk text
+
+*.xml text
+*.html text
+
+*.json text
+
+# These files get packaged into ApplicationResources.gpf, so ensure
+# they get consistent line endings for reproducibility.
+/ApplicationResourcePatches/**/*.json eol=lf
+/ApplicationResourcePatches/**/*.txt eol=lf
