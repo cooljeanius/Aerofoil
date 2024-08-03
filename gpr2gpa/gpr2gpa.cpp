@@ -2600,6 +2600,7 @@ int ConvertDirectory(const std::string &basePath, const PortabilityLayer::Combin
 			fprintf(stderr, "Failed to open metadata file ");
 			fputs_utf8(metaPath.c_str(), stderr);
 			fprintf(stderr, "\n");
+			return -1;
 		}
 
 		PortabilityLayer::MacFilePropertiesSerialized mfps;
