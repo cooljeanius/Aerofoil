@@ -511,7 +511,11 @@ target_include_directories(ConvertColorCursors PRIVATE
 target_link_libraries(ConvertColorCursors PortabilityLayer)
 
 
-file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/Packaged/Houses")
+add_custom_target(BuildDirs
+	BYPRODUCTS Packaged
+	COMMAND "${CMAKE_COMMAND}" -E make_directory Packaged/Houses
+	VERBATIM
+	)
 
 set(DATA_FILES)
 
@@ -534,6 +538,7 @@ function(add_data_file NAME)
 	add_custom_command(
 		OUTPUT "Packaged/${NAME}"
 		BYPRODUCTS ${ARG_BYPRODUCTS}
+		DEPENDS BuildDirs
 		${ARG_COMMANDS}
 		${RM_BYPRODUCTS_COMMAND} ${RM_BYPRODUCTS_PATHS}
 		VERBATIM
@@ -646,7 +651,7 @@ function(add_house NAME)
 			"${BASE_PATH}.gpf"
 		BYPRODUCTS
 			${BYPRODUCTS}
-		DEPENDS hqx2gp gpr2gpa MergeGPF
+		DEPENDS hqx2gp gpr2gpa MergeGPF BuildDirs
 		COMMAND hqx2gp
 			"${CMAKE_SOURCE_DIR}/GliderProData/Houses/${NAME}.binhex"
 			"${CMAKE_SOURCE_DIR}/DefaultTimestamp.timestamp"
@@ -673,7 +678,7 @@ function(add_house NAME)
 				"${BASE_PATH}.mov.gpf"
 			BYPRODUCTS
 				"${BASE_PATH}.mov.gpa"
-			DEPENDS FTagData MergeGPF "${MOV_GPA_SRC}"
+			DEPENDS FTagData MergeGPF BuildDirs "${MOV_GPA_SRC}"
 			COMMAND FTagData
 				"${CMAKE_SOURCE_DIR}/DefaultTimestamp.timestamp"
 				"${BASE_PATH}.mov.gpf"
