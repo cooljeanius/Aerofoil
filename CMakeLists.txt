@@ -550,7 +550,9 @@ add_data_file(ApplicationResources.gpf
 		Packaged/ApplicationResources.gpr
 		Packaged/ApplicationResources.gpa
 	COMMANDS
-	DEPENDS MiniRez gpr2gpa FTagData MergeGPF
+	DEPENDS
+		MiniRez gpr2gpa FTagData MergeGPF "GliderProData/Glider PRO.r"
+		ApplicationResourcePatches/manifest.json DefaultTimestamp.timestamp
 	COMMAND MiniRez
 		"GliderProData/Glider PRO.r"
 		"${CMAKE_CURRENT_BINARY_DIR}/Packaged/ApplicationResources.gpr"
@@ -568,6 +570,7 @@ add_data_file(ApplicationResources.gpf
 	WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
 	)
 
+file(GLOB_RECURSE FONT_DEPS RELATIVE "${CMAKE_SOURCE_DIR}" CONFIGURE_DEPENDS Resources/Fonts/*)
 add_data_file(Fonts.gpf
 	BYPRODUCTS
 		Packaged/Fonts.gpr
@@ -590,7 +593,7 @@ add_data_file(Fonts.gpf
 		Packaged/CachedFont13.bin
 		Packaged/CachedFont14.bin
 	COMMANDS
-	DEPENDS GenerateFonts MiniRez gpr2gpa FTagData MergeGPF
+	DEPENDS GenerateFonts MiniRez gpr2gpa FTagData MergeGPF ${FONT_DEPS}
 	COMMAND GenerateFonts "${CMAKE_SOURCE_DIR}/Resources" Packaged
 	COMMAND MiniRez "${CMAKE_SOURCE_DIR}/Empty.r" Packaged/Fonts.gpr
 	COMMAND gpr2gpa
@@ -645,20 +648,22 @@ function(add_house NAME)
 	list(APPEND HOUSE_FILES "${BASE_PATH}.gpf")
 
 	set(BYPRODUCTS "${BASE_PATH}.gpr" "${BASE_PATH}.gpa" "${BASE_PATH}.gpd")
+	set(BINHEX_SRC "${CMAKE_SOURCE_DIR}/GliderProData/Houses/${NAME}.binhex")
+	set(TS "${CMAKE_SOURCE_DIR}/DefaultTimestamp.timestamp")
 
 	add_custom_command(
 		OUTPUT
 			"${BASE_PATH}.gpf"
 		BYPRODUCTS
 			${BYPRODUCTS}
-		DEPENDS hqx2gp gpr2gpa MergeGPF BuildDirs
+		DEPENDS hqx2gp gpr2gpa MergeGPF BuildDirs "${BINHEX_SRC}" "${TS}"
 		COMMAND hqx2gp
-			"${CMAKE_SOURCE_DIR}/GliderProData/Houses/${NAME}.binhex"
-			"${CMAKE_SOURCE_DIR}/DefaultTimestamp.timestamp"
+			"${BINHEX_SRC}"
+			"${TS}"
 			"${BASE_PATH}"
 		COMMAND gpr2gpa
 			"${BASE_PATH}.gpr"
-			"${CMAKE_SOURCE_DIR}/DefaultTimestamp.timestamp"
+			"${TS}"
 			"${BASE_PATH}.gpa"
 			${PATCH_ARGS}
 		${HOUSE_EXTRA_COMMANDS}
@@ -678,9 +683,9 @@ function(add_house NAME)
 				"${BASE_PATH}.mov.gpf"
 			BYPRODUCTS
 				"${BASE_PATH}.mov.gpa"
-			DEPENDS FTagData MergeGPF BuildDirs "${MOV_GPA_SRC}"
+			DEPENDS FTagData MergeGPF BuildDirs "${MOV_GPA_SRC}" "${TS}"
 			COMMAND FTagData
-				"${CMAKE_SOURCE_DIR}/DefaultTimestamp.timestamp"
+				"${TS}"
 				"${BASE_PATH}.mov.gpf"
 				MooV ozm5 0 0 locked
 			COMMAND "${CMAKE_COMMAND}" -E copy
