@@ -512,8 +512,8 @@ target_link_libraries(ConvertColorCursors PortabilityLayer)
 
 
 add_custom_target(BuildDirs
-	BYPRODUCTS Packaged
-	COMMAND "${CMAKE_COMMAND}" -E make_directory Packaged/Houses
+	BYPRODUCTS Packaged tmp
+	COMMAND "${CMAKE_COMMAND}" -E make_directory Packaged/Houses tmp
 	VERBATIM
 	)
 
@@ -523,89 +523,61 @@ function(add_data_file NAME)
 	list(APPEND DATA_FILES "Packaged/${NAME}")
 	set(DATA_FILES "${DATA_FILES}" PARENT_SCOPE)
 
-	cmake_parse_arguments(PARSE_ARGV 1 ARG
-		""
-		""
-		"BYPRODUCTS;COMMANDS"
+	cmake_parse_arguments(PARSE_ARGV 1 ARG "" "" "")
+	set(TMPDIR "${CMAKE_CURRENT_BINARY_DIR}/tmp/${NAME}")
+	list(TRANSFORM ARG_UNPARSED_ARGUMENTS
+		REPLACE {TMPDIR} "${TMPDIR}"
 		)
-
-	if(ARG_BYPRODUCTS)
-		set(RM_BYPRODUCTS_COMMAND COMMAND "${CMAKE_COMMAND}" -E rm)
-		set(RM_BYPRODUCTS_PATHS "${ARG_BYPRODUCTS}")
-		list(TRANSFORM RM_BYPRODUCTS_PATHS PREPEND "${CMAKE_CURRENT_BINARY_DIR}/")
-	endif()
 
 	add_custom_command(
 		OUTPUT "Packaged/${NAME}"
-		BYPRODUCTS ${ARG_BYPRODUCTS}
 		DEPENDS BuildDirs
-		${ARG_COMMANDS}
-		${RM_BYPRODUCTS_COMMAND} ${RM_BYPRODUCTS_PATHS}
+		COMMAND "${CMAKE_COMMAND}" -E make_directory "${TMPDIR}"
+		${ARG_UNPARSED_ARGUMENTS}
+		COMMAND "${CMAKE_COMMAND}" -E rename
+			"${TMPDIR}/${NAME}"
+			"${CMAKE_CURRENT_BINARY_DIR}/Packaged/${NAME}"
+		COMMAND "${CMAKE_COMMAND}" -E rm -r -- "${TMPDIR}"
 		VERBATIM
 		)
 endfunction()
 
 add_data_file(ApplicationResources.gpf
-	BYPRODUCTS
-		Packaged/ApplicationResources.gpr
-		Packaged/ApplicationResources.gpa
-	COMMANDS
 	DEPENDS
 		MiniRez gpr2gpa FTagData MergeGPF "GliderProData/Glider PRO.r"
 		ApplicationResourcePatches/manifest.json DefaultTimestamp.timestamp
 	COMMAND MiniRez
 		"GliderProData/Glider PRO.r"
-		"${CMAKE_CURRENT_BINARY_DIR}/Packaged/ApplicationResources.gpr"
+		"{TMPDIR}/ApplicationResources.gpr"
 	COMMAND gpr2gpa
-		"${CMAKE_CURRENT_BINARY_DIR}/Packaged/ApplicationResources.gpr"
+		"{TMPDIR}/ApplicationResources.gpr"
 		DefaultTimestamp.timestamp
-		"${CMAKE_CURRENT_BINARY_DIR}/Packaged/ApplicationResources.gpa"
+		"{TMPDIR}/ApplicationResources.gpa"
 		-patch ApplicationResourcePatches/manifest.json
 	COMMAND FTagData
 		DefaultTimestamp.timestamp
-		"${CMAKE_CURRENT_BINARY_DIR}/Packaged/ApplicationResources.gpf"
+		"{TMPDIR}/ApplicationResources.gpf"
 		data ozm5 0 0 locked
 	COMMAND MergeGPF
-		"${CMAKE_CURRENT_BINARY_DIR}/Packaged/ApplicationResources.gpf"
+		"{TMPDIR}/ApplicationResources.gpf"
 	WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
 	)
 
 file(GLOB_RECURSE FONT_DEPS RELATIVE "${CMAKE_SOURCE_DIR}" CONFIGURE_DEPENDS Resources/Fonts/*)
 add_data_file(Fonts.gpf
-	BYPRODUCTS
-		Packaged/Fonts.gpr
-		Packaged/Fonts.gpa
-		Packaged/FontCacheCatalog.bin
-		Packaged/FontCacheManifest.json
-		Packaged/CachedFont0.bin
-		Packaged/CachedFont1.bin
-		Packaged/CachedFont2.bin
-		Packaged/CachedFont3.bin
-		Packaged/CachedFont4.bin
-		Packaged/CachedFont5.bin
-		Packaged/CachedFont6.bin
-		Packaged/CachedFont7.bin
-		Packaged/CachedFont8.bin
-		Packaged/CachedFont9.bin
-		Packaged/CachedFont10.bin
-		Packaged/CachedFont11.bin
-		Packaged/CachedFont12.bin
-		Packaged/CachedFont13.bin
-		Packaged/CachedFont14.bin
-	COMMANDS
 	DEPENDS GenerateFonts MiniRez gpr2gpa FTagData MergeGPF ${FONT_DEPS}
-	COMMAND GenerateFonts "${CMAKE_SOURCE_DIR}/Resources" Packaged
-	COMMAND MiniRez "${CMAKE_SOURCE_DIR}/Empty.r" Packaged/Fonts.gpr
+	COMMAND GenerateFonts "${CMAKE_SOURCE_DIR}/Resources" {TMPDIR}
+	COMMAND MiniRez "${CMAKE_SOURCE_DIR}/Empty.r" {TMPDIR}/Fonts.gpr
 	COMMAND gpr2gpa
-		Packaged/Fonts.gpr
+		{TMPDIR}/Fonts.gpr
 		"${CMAKE_SOURCE_DIR}/DefaultTimestamp.timestamp"
-		Packaged/Fonts.gpa
-		-patch Packaged/FontCacheManifest.json
+		{TMPDIR}/Fonts.gpa
+		-patch {TMPDIR}/FontCacheManifest.json
 	COMMAND FTagData
 		DefaultTimestamp.timestamp
-		Packaged/Fonts.gpf
+		{TMPDIR}/Fonts.gpf
 		data ozm5 0 0 locked
-	COMMAND MergeGPF Packaged/Fonts.gpf
+	COMMAND MergeGPF {TMPDIR}/Fonts.gpf
 	)
 
 # These files are committed to the repo and aren't currently useful on non-Windows systems anyway.
