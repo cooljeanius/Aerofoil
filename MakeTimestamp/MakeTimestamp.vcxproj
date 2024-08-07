@@ -59,18 +59,22 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\PortabilityLayer.props" />
+    <Import Project="..\WindowsUnicodeToolShim.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\PortabilityLayer.props" />
+    <Import Project="..\WindowsUnicodeToolShim.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\PortabilityLayer.props" />
+    <Import Project="..\WindowsUnicodeToolShim.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\PortabilityLayer.props" />
+    <Import Project="..\WindowsUnicodeToolShim.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup />
@@ -124,6 +128,9 @@
   <ItemGroup>
     <ProjectReference Include="..\PortabilityLayer\PortabilityLayer.vcxproj">
       <Project>{6ec62b0f-9353-40a4-a510-3788f1368b33}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\WindowsUnicodeToolShim\WindowsUnicodeToolShim.vcxproj">
+      <Project>{15009625-1120-405e-8bba-69a16cd6713d}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -9,9 +9,10 @@
 
 #include <cstdio>
 
+#include "WindowsUnicodeToolShim.h"
 #include "CombinedTimestamp.h"
 
-int main(int argc, const char **argv)
+int toolMain(int argc, const char **argv)
 {
 	if (argc != 2)
 	{
@@ -84,7 +85,7 @@ int main(int argc, const char **argv)
 
 	memset(ts.m_padding, 0, sizeof(ts.m_padding));
 
-	FILE *f = fopen(argv[1], "wb");
+	FILE *f = fopen_utf8(argv[1], "wb");
 	if (!f)
 	{
 		perror("Error opening output file");
