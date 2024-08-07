@@ -344,6 +344,7 @@ void DoAboutFramework (void)
 	surface->DrawString(Point::Create(creditsHorizontalOffset, verticalPoint + spacing * (lineNum++)), PSTR("Eric Lasota - Programming, admin"), blackColor, font);
 	surface->DrawString(Point::Create(creditsHorizontalOffset, verticalPoint + spacing * (lineNum++)), PSTR("Thijs Verboon - macOS programming"), blackColor, font);
 	surface->DrawString(Point::Create(creditsHorizontalOffset, verticalPoint + spacing * (lineNum++)), PSTR("Phil Marell - macOS programming"), blackColor, font);
+	surface->DrawString(Point::Create(creditsHorizontalOffset, verticalPoint + spacing * (lineNum++)), PSTR("Iain King-Speir - Linux programming"), blackColor, font);
 	(lineNum++);
 	surface->DrawString(Point::Create(horizontalOffset, verticalPoint + spacing * (lineNum++)), PSTR(GP_APPLICATION_NAME " is an unoffical third-party port of Glider PRO."), blackColor, font);
 	(lineNum++);
