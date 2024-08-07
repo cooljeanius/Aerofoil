@@ -375,8 +375,11 @@ target_include_directories(gpr2gpa PRIVATE
 	)
 target_link_libraries(gpr2gpa PortabilityLayer MacRomanConversion zlib)
 
-add_executable(MakeTimestamp EXCLUDE_FROM_ALL MakeTimestamp/MakeTimestamp.cpp)
-target_include_directories(MakeTimestamp PRIVATE PortabilityLayer)
+add_executable(MakeTimestamp EXCLUDE_FROM_ALL
+	MakeTimestamp/MakeTimestamp.cpp
+	WindowsUnicodeToolShim/UnixUnicodeToolShim.cpp
+	)
+target_include_directories(MakeTimestamp PRIVATE PortabilityLayer WindowsUnicodeToolShim)
 target_link_libraries(MakeTimestamp PortabilityLayer)
 
 add_executable(FTagData EXCLUDE_FROM_ALL
