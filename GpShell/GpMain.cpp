@@ -16,6 +16,7 @@
 #include "IGpDisplayDriver.h"
 #include "IGpFontHandler.h"
 #include "IGpInputDriver.h"
+#include "IGpLogDriver.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -119,9 +120,17 @@ int GpMain::Run()
 	appEnvironment->SetSystemServices(g_gpGlobalConfig.m_systemServices);
 
 	// Start the display loop
-	displayDriver->Init();
-
-	appEnvironment->Run();
+	if (displayDriver->Init())
+	{
+		appEnvironment->Run();
+	}
+	else
+	{
+		IGpLogDriver *logger = g_gpGlobalConfig.m_logger;
+		if (logger)
+			logger->Printf(IGpLogDriver::Category_Error, "Failed to start display driver");
+		return -1;
+	}
 
 	// Clean up
 	if (inputDrivers)

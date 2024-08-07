@@ -1301,6 +1301,13 @@ bool GpDisplayDriver_SDL_GL2::Init()
 		windowFlags |= SDL_WINDOW_RESIZABLE;
 
 	m_window = SDL_CreateWindow(GP_APPLICATION_NAME, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, m_windowWidthPhysical, m_windowHeightPhysical, windowFlags);
+	if (!m_window)
+	{
+		if (logger)
+			logger->Printf(IGpLogDriver::Category_Error, "Failed to create window: %s", SDL_GetError());
+
+		return false;
+	}
 
 	if (m_isFullScreen)
 	{
