@@ -47,3 +47,6 @@ to install them.
 
 Please report any issues that you experience with this to the issue tracker on
 GitHub.
+
+If the executable doesn't start, try running with the -diagnostics flag to
+output a log file, typically to ~/.local/share/aerofoil/aerofoil/Logs
