@@ -1,9 +1,10 @@
-#ifdef __MACOS__
-	#define GP_GL_SHADER_CODE_MEDIUM_PRECISION_PREFIX ""
-	#define GP_GL_SHADER_CODE_HIGH_PRECISION_PREFIX	""
-#else
+#ifdef __ANDROID__
+	// This doesn't work on AMD Windows drivers
 	#define GP_GL_SHADER_CODE_MEDIUM_PRECISION_PREFIX "precision mediump float;\n"
 	#define GP_GL_SHADER_CODE_HIGH_PRECISION_PREFIX "precision highp float;\n"
+#else
+	#define GP_GL_SHADER_CODE_MEDIUM_PRECISION_PREFIX ""
+	#define GP_GL_SHADER_CODE_HIGH_PRECISION_PREFIX	""
 #endif
 
 #define GP_GL_SHADER_CODE_FUNCTIONS_H	"vec3 pow3(vec3 v, float ex)\n"\
