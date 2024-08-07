@@ -72,7 +72,7 @@ int ProcessFileDatesInfo(FILE *f, uint32_t length, PortabilityLayer::MacFileProp
 		return -1;
 	}
 
-	const int64_t asEpochToMacEpoch = -3029547600LL;
+	const int64_t asEpochToMacEpoch = 3029547600LL;
 
 	// Mac epoch in Unix time: -2082844800
 	// ASAD epoch in Unix time: 946702800

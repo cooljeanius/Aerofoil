@@ -91,7 +91,7 @@ GpSystemServices_Web::GpSystemServices_Web()
 int64_t GpSystemServices_Web::GetTime() const
 {
 	time_t t = time(nullptr);
-	return static_cast<int64_t>(t) - 2082844800;
+	return static_cast<int64_t>(t) + 2082844800;
 }
 
 void GpSystemServices_Web::GetLocalDateTime(unsigned int &year, unsigned int &month, unsigned int &day, unsigned int &hour, unsigned int &minute, unsigned int &second) const
