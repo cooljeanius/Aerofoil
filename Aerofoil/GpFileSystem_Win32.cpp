@@ -206,7 +206,11 @@ bool GpFileSystem_Win32::Init()
 			break;
 		}
 		else
+		{
+			if (currentPathLength == 0)
+				break;
 			currentPathLength--;
+		}
 	}
 
 	if (currentPathLength == 0)
