@@ -18,7 +18,7 @@ namespace PortabilityLayer
 
 		uint8_t m_padding[3];
 
-		static const int32_t kMacEpochToUTC = 2082844800;
+		static const int32_t kMacEpochToUTC = -2082844800;
 
 		int64_t GetMacEpochTime() const;
 		void SetMacEpochTime(int64_t timestamp);

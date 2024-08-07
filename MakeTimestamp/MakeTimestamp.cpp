@@ -71,7 +71,7 @@ int main(int argc, const char **argv)
 	}
 
 	PortabilityLayer::CombinedTimestamp ts;
-	ts.SetMacEpochTime(currentTimeUnix + ts.kMacEpochToUTC);
+	ts.SetMacEpochTime(static_cast<int64_t>(currentTimeUnix) - ts.kMacEpochToUTC);
 
 	ts.SetLocalYear(currentTimeStruct->tm_year + 1900);
 	ts.m_localMonth = currentTimeStruct->tm_mon + 1;
