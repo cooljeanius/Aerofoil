@@ -104,7 +104,7 @@ void GpAllocator_C::Free(void *buf)
 	const GpAllocator_C_MMBlock *mmBlock = reinterpret_cast<const GpAllocator_C_MMBlock*>(bytes - GpAllocator_C_MMBlock::AlignedSize());
 
 	void *freeLoc = bytes - GpAllocator_C_MMBlock::AlignedSize() - mmBlock->m_offsetFromAllocLocation;
-	(void)realloc(freeLoc, 0);
+	free(freeLoc);
 }
 
 GpAllocator_C *GpAllocator_C::GetInstance()
