@@ -123,57 +123,14 @@ void ScanDirectoryForExtension(std::vector<std::string> &outPaths, const char *p
 	FindClose(h);
 }
 
-struct DirectoryScanContext
+int fseek_int64(FILE *f, int64_t offset, int origin)
 {
-	WIN32_FIND_DATAW m_findDataW;
-	HANDLE m_handle;
-	bool m_first;
-
-	std::string m_utf8Name;
-	DirectoryScanEntry m_currentEntry;
-};
-
-static void ParseDirEntry(DirectoryScanContext &context)
-{
-	context.m_utf8Name = ConvertWStringToUTF8(context.m_findDataW.cFileName);
-	context.m_currentEntry.m_name = context.m_utf8Name.c_str();
+	return _fseeki64(f, offset, origin);
 }
 
-DirectoryScanContext *opendir_utf8(const char *name)
+int64_t ftell_int64(FILE *f)
 {
-	DirectoryScanContext *context = new DirectoryScanContext();
-
-	std::wstring dirFilter = std::wstring(L"\\\\?\\") + ConvertUTF8ToWString(name) + L"\\*";
-
-	context->m_handle = FindFirstFileW(dirFilter.c_str(), &context->m_findDataW);
-	if (context->m_handle == INVALID_HANDLE_VALUE)
-	{
-		delete context;
-		return nullptr;
-	}
-
-	context->m_first = true;
-	return context;
-}
-
-DirectoryScanEntry *readdir_utf8(DirectoryScanContext *dir)
-{
-	if (dir->m_first)
-		dir->m_first = false;
-	else
-	{
-		if (!FindNextFileW(dir->m_handle, &dir->m_findDataW))
-			return nullptr;
-	}
-
-	ParseDirEntry(*dir);
-	return &dir->m_currentEntry;
-}
-
-void closedir_utf8(DirectoryScanContext *context)
-{
-	FindClose(context->m_handle);
-	delete context;
+	return _ftelli64(f);
 }
 
 int toolMain(int argc, const char **argv);

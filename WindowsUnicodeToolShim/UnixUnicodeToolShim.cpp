@@ -1,3 +1,4 @@
+#define _FILE_OFFSET_BITS 64
 #include "WindowsUnicodeToolShim.h"
 
 #include <cstdio>
@@ -96,4 +97,14 @@ void ScanDirectoryForExtension
 		}
 	}
 	closedir(dir);
+}
+
+int fseek_int64(FILE *f, int64_t offset, int origin)
+{
+	return fseeko(f, static_cast<off_t>(offset), origin);
+}
+
+int64_t ftell_int64(FILE *f)
+{
+	return static_cast<int64_t>(ftello(f));
 }

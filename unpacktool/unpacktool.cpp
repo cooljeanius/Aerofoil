@@ -70,22 +70,22 @@ size_t CFileReader::FileSize() const
 
 bool CFileReader::SeekStart(FilePos_t pos)
 {
-	return !_fseeki64(m_file, pos, SEEK_SET);
+	return !fseek_int64(m_file, pos, SEEK_SET);
 }
 
 bool CFileReader::SeekCurrent(FilePos_t pos)
 {
-	return !_fseeki64(m_file, pos, SEEK_CUR);
+	return !fseek_int64(m_file, pos, SEEK_CUR);
 }
 
 bool CFileReader::SeekEnd(FilePos_t pos)
 {
-	return !_fseeki64(m_file, pos, SEEK_END);
+	return !fseek_int64(m_file, pos, SEEK_END);
 }
 
 IFileReader::FilePos_t CFileReader::GetPosition() const
 {
-	return _ftelli64(m_file);
+	return ftell_int64(m_file);
 }
 
 StuffItParser g_stuffItParser;
