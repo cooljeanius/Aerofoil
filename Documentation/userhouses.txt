@@ -5,37 +5,60 @@ files, if necessary, to the "Houses" directory inside of the "Aerofoil"
 directory in your "Documents" directory, then restart Aerofoil.
 
 
-
-
 IMPORTING EXISTING COMMUNITY CONTENT TO AEROFOIL
 -------------------------------------------------------------------------------
 If you want to import an existing third-party Glider PRO house to Aerofoil,
-a few steps are required.
+a few steps are required.  All Aerofoil import tools are currently command-line
+only, so you will need to use a command prompt to use them.  Launch the tool
+programs without any arguments and they will give instructions for usage.
 
-You need to convert the file into Aerofoil's "triplet" format, which consists
-of a metadata file (extension .gpf), and file forks (.gpd for data, .gpr for
-resources).  How you get these depends on the input format:
-- For MacBinary files (.bin), use the "bin2gp" utility
-- For BinHex files (.hqx), use the "hqx2gp" utility
-- For StuffIt (.sit) and Compact Pro (.cpt) archives, use the "unpacktool"
-  utility to extract the contents in triplet format.  The "unpacktool"
-  utility should support most vintage StuffIt archives made with StuffIt
-  Deluxe 6 or lower.
 
-(NOTE: ".sea" files are self-extracting archives, typically StuffIt or Compact
-Pro archives with the self-extractor program in the resources.  These will
-always be distributed in a fork-grouping container like MacBinary or BinHex.
-For cases like these, you need to split the self-extracting archive using
-"bin2gp" or "hqx2gp" and then pass the ".sea.gpd" file (which contains the
-archive data) to "unpacktool" to decompress it.)
+Some history: On most modern operating systems, files are a single stream of
+data, and the file type is represented by an extension at the end of the file
+name.  On classic Macintosh systems, files have 2 streams: The data fork and
+resource fork, and the file type (among other things) is stored in a metadata
+block that is separate from the file data itself.
 
-Once you've done that, if the house has custom resources (i.e. a .gpr file),
-you need to convert it to an Aerofoil resource archive, which you can do using
-the "gpr2gpa" tool.
+Macintosh Glider PRO house files use the data fork to store the level data and
+the resource fork to store custom features like sounds.
 
+However, most server software only supports transmitting files as a single data
+stream, so Macintosh files were shared in formats that bundle the 3 types of
+data into a single data stream, and were converted into the full Macintosh
+format files using conversion software on a Macintosh machine.
+
+Aerofoil's unpack tools will always extract Macintosh files as a triplet of 3
+files:
+- The resource fork will be split to a file with a ".gpr" extension
+- The data fork will be split to a file with a ".gpa" extension
+- The metadata will be split to a file with a ".gpf" extension
+
+Some file types you may encounter in the wild:
+- MacBinary files (.bin): These encode a single file.  Use the "bin2gp"
+  utility to unpack it.
+- BinHex files (.hqx): These encode a single file.  Use the "hqx2gp" utility
+  to unpack it.
+- Compact Pro (.cpt) and StuffIt (.sit) archives encode multiple files.
+  Use the "unpacktool" utility to extract it.
+- Self-extracting archives (.sea) are programs that contain archive data,
+  usually in StuffIt or Compact Pro format, in the data fork, and a
+  decompression program in the resource fork.  Typically you will encounter
+  these as ".sea.hqx" or similar.  For these, you need to extract the .sea
+  file from its original encoding, and then pass the data fork file (.gpd)
+  to the "unpacktool" utility.
+
+
+Once you've unpacked the data for the house, you may need to convert the
+resources (.gpr file) to Aerofoil's resource format.  Aerofoil can not read .gpr
+files directly.
+
+To convert resources for a house, use the "gpr2gpa" utility.  Note that
 gpr2gpa's PICT converter may not support all PICT encodings.  If you find a
 house with custom PICT resources that isn't supported, please submit a sample
 to Aerofoil's issue tracker.
+
+Once you've done this, you should have a .gpf, .gpa, and .gpd file for the
+house.  Put them in the Houses directory to add the house to Aerofoil.
 
 
 IMPORTING TV QUICKTIME MOVIES
@@ -79,12 +102,9 @@ with an asterisk (*) and omit the output filename.
 
 SECURITY CONSIDERATIONS
 ------------------------------------------------------------------------------
-Glider PRO didn't really do any validation of houses.  Currently, Aerofoil
-doesn't do any additional validation either, and it's possible that invalid
-house data may lead to crashes or even remote code execution.
-
-Aerofoil 1.1 has a significantly stricter validator, which will reject data
-that seems excessively large or invalid.
+Glider PRO didn't really do any validation of houses.  Aerofoil 1.1 has a
+significantly stricter validator, which will reject data that seems
+excessively large or invalid.
 
 Also, Glider PRO houses were able to take advantage of a resource overlaying
 feature of the Macintosh operating system, where a resource being present in
