@@ -524,7 +524,7 @@ void DoLoadHouse (void)
 void SortHouseList (void)
 {
 	VFileSpec	tempSpec;
-	short		i, h, whosFirst;
+	int		i, h, whosFirst;
 	
 	i = 0;			// remove exact duplicate houses
 	while (i < housesFound)
