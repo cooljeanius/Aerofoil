@@ -411,7 +411,8 @@
         WinPE_RsrcDataEntryRec  data_entry;
 
         FT_ULong   root_dir_offset, name_dir_offset, lang_dir_offset;
-        FT_UShort  i, j, k;
+        FT_UShort  i, j;
+        FT_UInt    k;
 
 
         FT_TRACE2(( "PE signature found\n" ));
