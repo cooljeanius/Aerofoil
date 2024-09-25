@@ -287,7 +287,7 @@ bool StuffItArsenicDecompressor::ReadBlock()
 		endofblocks=true;
 	}
 
-	free(transform);
+	delete[] transform;
 	transform = new uint32_t[numbytes];
 	CalculateInverseBWT(transform,block,numbytes);
 
