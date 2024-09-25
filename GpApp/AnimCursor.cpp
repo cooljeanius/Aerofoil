@@ -201,7 +201,7 @@ IGpCursor *LoadColorCursor(int16_t resID)
 		memcpy(decodedCTabItems + index, rgba, 4);
 	}
 
-	uint32_t *pixelDataRGBA = static_cast<uint32_t*>(mm->Alloc(width * height * 4));
+	uint32_t *pixelDataRGBA = static_cast<uint32_t*>(mm->Alloc(static_cast<size_t>(width) * static_cast<size_t>(height) * 4));
 	if (!pixelDataRGBA)
 	{
 		mm->Release(colorValues);
