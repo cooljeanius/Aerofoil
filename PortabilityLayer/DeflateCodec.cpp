@@ -15,7 +15,7 @@ namespace
 {
 	static voidpf ZlibAllocShim(voidpf opaque, uInt items, uInt size)
 	{
-		return static_cast<PortabilityLayer::MemoryManager*>(opaque)->Alloc(items * size);
+		return static_cast<PortabilityLayer::MemoryManager*>(opaque)->Alloc(static_cast<size_t>(items) * size);
 	}
 
 	void ZlibFreeShim(voidpf opaque, voidpf address)
