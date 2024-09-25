@@ -2142,9 +2142,9 @@
                                    sizeof ( FT_Var_Axis ) );
     namedstyle_size  = ALIGN_SIZE( num_instances *
                                    sizeof ( FT_Var_Named_Style ) );
-    next_coords_size = ALIGN_SIZE( num_instances *
-                                   num_axes *
-                                   sizeof ( FT_Fixed ) );
+    next_coords_size = ALIGN_SIZE((size_t)num_instances *
+                                  (size_t)num_axes *
+                                  sizeof(FT_Fixed));
     next_name_size   = num_axes * 5;
 
     if ( need_init )
