@@ -129,7 +129,7 @@ namespace PortabilityLayer
 		if (static_cast<uint64_t>(width) * static_cast<uint64_t>(height) > SIZE_MAX)
 			return nullptr;
 
-		const size_t numElements = static_cast<uint64_t>(width) * static_cast<uint64_t>(height);
+		const size_t numElements = static_cast<size_t>(width) * static_cast<size_t>(height);
 
 #if PL_SCANLINE_MASKS_DEBUGGING
 		const size_t storageSize = numElements * 4;
