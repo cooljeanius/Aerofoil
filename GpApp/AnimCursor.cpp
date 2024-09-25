@@ -144,7 +144,7 @@ IGpCursor *LoadColorCursor(int16_t resID)
 
 	PortabilityLayer::MemoryManager *mm = PortabilityLayer::MemoryManager::GetInstance();
 
-	uint8_t *colorValues = static_cast<uint8_t*>(mm->Alloc(width * height));
+	uint8_t *colorValues = static_cast<uint8_t*>(mm->Alloc(static_cast<size_t>(width) * height));
 	if (!colorValues)
 	{
 		resHdl.Dispose();
