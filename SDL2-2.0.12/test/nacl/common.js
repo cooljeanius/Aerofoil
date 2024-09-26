@@ -18,6 +18,23 @@ var isRelease = true;
 // code.
 var common = (function() {
 
+  function escapeHtml(unsafe) {
+    return unsafe.replace(/[&<"']/g, function (m) {
+      switch (m) {
+        case '&':
+          return '&amp;';
+        case '<':
+          return '&lt;';
+        case '"':
+          return '&quot;';
+        case "'":
+          return '&#039;';
+        default:
+          return m;
+      }
+    });
+  }
+
   function isHostToolchain(tool) {
     return tool == 'win' || tool == 'linux' || tool == 'mac';
   }
@@ -127,7 +144,7 @@ var common = (function() {
     moduleEl.setAttribute('width', width);
     moduleEl.setAttribute('height', height);
     moduleEl.setAttribute('path', path);
-    moduleEl.setAttribute('src', path + '/' + name + '.nmf');
+    moduleEl.setAttribute('src', path + '/' + escapeHtml(name) + '.nmf');
 
     // Add any optional arguments
     if (attrs) {
