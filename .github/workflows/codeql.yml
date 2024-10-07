@@ -1,4 +1,5 @@
-# Aerofoil/.github/workflows/codeql.yml: GitHub Actions codeql workflow for Aerofoil
+---
+# Aerofoil/.github/workflows/codeql.yml: GHA CodeQL workflow for Aerofoil
 # For most projects, this workflow file will not need changing; you simply need
 # to commit it to your repository.
 #
@@ -43,60 +44,57 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'c-cpp', 'javascript-typescript', 'python' ]
-        # CodeQL supports [ 'c-cpp', 'csharp', 'go', 'java-kotlin', 'javascript-typescript', 'python', 'ruby', 'swift' ]
-        # Use only 'java-kotlin' to analyze code written in Java, Kotlin or both
-        # Use only 'javascript-typescript' to analyze code written in JavaScript, TypeScript or both
-        # Learn more about CodeQL language support at https://aka.ms/codeql-docs/language-support
+        language: ['c-cpp', 'javascript-typescript', 'python']
+        # CodeQL supports the following languages:
+        # 'c-cpp', 'csharp', 'go', 'java-kotlin', 'javascript-typescript',
+        # 'python', 'ruby', 'swift'
+        # Use 'java-kotlin' to analyze code written in Java, Kotlin, or both
+        # Use 'javascript-typescript' to analyze code written in JavaScript,
+        # TypeScript, or both
+        # Learn more about CodeQL language support at:
+        # https://aka.ms/codeql-docs/language-support
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    # Initializes the CodeQL tools for scanning.
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v2
-      with:
-        languages: ${{ matrix.language }}
-        # If you wish to specify custom queries, you can do so here or in a config file.
-        # By default, queries listed here will override any specified in a config file.
-        # Prefix the list here with "+" to use these queries and those in the config file.
+      # Initializes the CodeQL tools for scanning.
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: ${{ matrix.language }}
+          # If you wish to specify custom queries, you can do so here or in a
+          # config file.
+          # By default, queries listed here will override any specified in a
+          # config file.
+          # Prefix the list here with "+" to use these queries and those in the
+          # config file.
 
-        # For more details on CodeQL's query packs, refer to:
-        # https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
-        # queries: security-extended,security-and-quality
+          # For more details on CodeQL's query packs, refer to:
+          # https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
+          # queries: security-extended,security-and-quality
 
-    - name: Dependencies
-      if: matrix.language == 'csharp'
-      run: |
-        choco install emscripten
-        refreshenv
-        npm install --save emscripten
-        nuget install Microsoft.NET.Runtime.Emscripten.2.0.23.Sdk.win-x64
-        pip install auditwheel-emscripten itkwasm-compress-stringify-emscripten empack || pip install itkwasm-compress-stringify-emscripten empack
-        pipx install auditwheel-emscripten || pipx install pyodide-cli || pipx install wasmtime || pipx install pycowsay
-        pipx install --include-deps itkwasm-compress-stringify-emscripten
-        pipx install empack
-        gem install esruby
-        yarn add quickjs-emscripten
+      - name: Dependencies
+        if: matrix.language == 'csharp'
+        run: |
+          choco install emscripten
+          refreshenv
+          npm install --save emscripten
+          nuget install Microsoft.NET.Runtime.Emscripten.2.0.23.Sdk.win-x64
+          pip install auditwheel-emscripten itkwasm-compress-stringify-emscripten empack || pip install itkwasm-compress-stringify-emscripten empack
+          pipx install auditwheel-emscripten || pipx install pyodide-cli || pipx install wasmtime || pipx install pycowsay
+          pipx install --include-deps itkwasm-compress-stringify-emscripten
+          pipx install empack
+          gem install esruby
+          yarn add quickjs-emscripten
 
-    # Autobuild attempts to build any compiled languages (C/C++, C#, Go, Java, or Swift).
-    # If this step fails, then you should remove it and run the build manually (see below)
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@v2
+      # Autobuild attempts to build any compiled languages
+      # (C/C++, C#, Go, Java, or Swift).
+      # If this step fails, then you should remove it and run the build manually
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v2
 
-    # Command-line programs to run using the OS shell.
-    # See:
-    # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
-
-    #   If the Autobuild fails above, remove it and uncomment the following three lines.
-    #   modify them (or add more) to build your code if your project, please refer to the EXAMPLE below for guidance.
-
-    # - run: |
-    #     echo "Run, Build Application using script"
-    #     ./location_of_script_within_repo/buildscript.sh
-
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v2
-      with:
-        category: "/language:${{matrix.language}}"
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
+        with:
+          category: "/language:${{matrix.language}}"
